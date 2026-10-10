@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docinhos de Festa 12g — Dois Amores Doceria | Ponta Grossa, PR</title>
+<meta name="description" content="Docinhos de festa artesanais 12g (Tradicionais, Especiais e Gourmets). Pedido mínimo de 25 unidades. Peça pelo WhatsApp.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="catalog-page">
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <img src="images/logo.svg" alt="Logo Dois Amores">
+    </div>
+    <nav class="navlinks" id="navlinks">
+      <a href="index.html#novidades" onclick="closeMenu()"><i class="fa-solid fa-sparkles"></i> Novidades</a>
+      <a href="index.html#cardapio" onclick="closeMenu()"><i class="fa-solid fa-utensils"></i> Festival do Morango</a>
+      <a href="docinhos.html" onclick="closeMenu()"><i class="fa-solid fa-candy-cane"></i> Docinhos</a>
+      <a href="index.html#sobremesas" onclick="closeMenu()"><i class="fa-solid fa-cake-candles"></i> Sobremesas</a>
+      <a href="presentes.html" onclick="closeMenu()"><i class="fa-solid fa-gift"></i> Presentes</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Artesanais · 12 gramas</p>
+    <h1>Docinhos de Festa</h1>
+    <p style="color:var(--creme-dim); margin-top:10px;">Pedido mínimo de <strong>25 unidades</strong> por sabor, podendo ser aumentado de <strong>25 em 25 unidades</strong> (25, 50, 75, 100...).</p>
+  </div>
+</section>
+
+<section class="menu">
+  <div class="wrap" id="docinhos-container">
+    <p style="color:var(--creme-dim); font-style:italic;">Carregando docinhos...</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">Dois Amores Doceria</div>
+      <div class="footer-links">
+        <a href="index.html#sobre"><i class="fa-solid fa-book-open"></i> Sobre</a>
+        <a href="index.html#cardapio"><i class="fa-solid fa-utensils"></i> Festival</a>
+        <a href="docinhos.html" style="color:var(--ouro);"><i class="fa-solid fa-candy-cane"></i> Docinhos</a>
+        <a href="presentes.html"><i class="fa-solid fa-gift"></i> Presentes</a>
+      </div>
+    </div>
+    <div class="footer-fine">
+      <span>Rua Dirceu Chagas, 37, Cará-Cará, Ponta Grossa — PR · CEP 84033-889 · © Dois Amores Doceria</span>
+      <span class="footer-dev">Desenvolvido por Aston Studio Digital</span>
+    </div>
+  </div>
+</footer>
+
+<button class="float-wa" onclick="toggleCart(true)">
+  <i class="fa-solid fa-bag-shopping"></i> <span>Ver Carrinho</span>
+  <div class="cart-badge" id="cart-badge">0</div>
+</button>
+
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>Seu Pedido</h3>
+    <button class="close-cart" onclick="toggleCart(false)">×</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty">Seu carrinho está vazio.</p>
+  </div>
+  <div class="cart-form-container" id="cart-form" style="display: none;">
+    <div class="cart-form-group">
+      <label for="customer-name">Seu Nome:</label>
+      <input type="text" id="customer-name" class="cart-input" placeholder="Como podemos te chamar?">
+    </div>
+    <div class="cart-form-group">
+      <label for="customer-whatsapp">Seu WhatsApp (com DDD): *</label>
+      <input type="text" id="customer-whatsapp" class="cart-input" placeholder="Ex: 42999998888">
+    </div>
+    <div class="cart-form-group">
+      <label for="payment-method">Forma de Pagamento:</label>
+      <select id="payment-method" class="cart-input">
+        <option value="Pix">Pix</option>
+        <option value="Link de cartão de crédito">Link de cartão de crédito</option>
+        <option value="Dinheiro">Dinheiro (Retirada)</option>
+      </select>
+    </div>
+    <div class="cart-form-group">
+      <label>Recebimento:</label>
+      <div class="cart-radio-group">
+        <label><input type="radio" name="delivery-option" value="Retirada" onchange="toggleDeliveryForm()" checked> Retirada</label>
+        <label><input type="radio" name="delivery-option" value="Entrega" onchange="toggleDeliveryForm()"> Entrega</label>
+      </div>
+    </div>
+    <div class="cart-form-group">
+      <label for="order-date">Data:</label>
+      <input type="date" id="order-date" class="cart-input">
+    </div>
+    <div id="address-container">
+      <div class="cart-form-group">
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" class="cart-input" placeholder="Somente números" maxlength="9" onblur="buscarCEP()">
+      </div>
+      <div class="cart-form-group">
+        <label for="rua">Rua:</label>
+        <input type="text" id="rua" class="cart-input" readonly>
+      </div>
+      <div class="grid-2-cols">
+        <div class="cart-form-group">
+          <label for="numero">Número:</label>
+          <input type="text" id="numero" class="cart-input">
+        </div>
+        <div class="cart-form-group">
+          <label for="complemento">Comp.:</label>
+          <input type="text" id="complemento" class="cart-input">
+        </div>
+      </div>
+      <div class="cart-form-group">
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" class="cart-input" readonly>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total:</span>
+      <span id="cart-total-value">R$ 0,00</span>
+    </div>
+    <button class="btn" style="width:100%; justify-content:center;" onclick="checkoutWhatsapp()">
+      Finalizar no WhatsApp 💬
+    </button>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const navlinks = document.getElementById('navlinks');
+  toggle.addEventListener('click', () => navlinks.classList.toggle('open'));
+  function closeMenu(){ navlinks.classList.remove('open'); }
+
+  const SUPABASE_URL = 'https://ecejppxklzrleumionqt.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'sb_publishable_BuvSH51vbG4ln9sUZm43RQ_qe9WOx1L'; 
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let catalogoDocinhosSupabase = [];
+  let qtdSelecionadaPorItem = {};
+  let cart = [];
+  let taxaEntrega = 0;
+  const tabelaFrete = { "Cará-Cará": 10.00, "Uvaranas": 12.00, "Centro": 15.00, "Oficinas": 12.00, "Estrela": 15.00, "Jardim Carvalho": 15.00, "Contorno": 18.00, "Nova Rússia": 15.00, "Neves": 15.00, "Olarias": 12.00, "Boa Vista": 20.00, "Órfãs": 15.00 };
+  const taxaPadrao = 18.00;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const hojeIso = new Date().toISOString().split('T')[0];
+    const inputData = document.getElementById('order-date');
+    if (inputData) { inputData.value = hojeIso; inputData.min = hojeIso; }
+    carregarDocinhosNuvem();
+  });
+
+  async function carregarDocinhosNuvem() {
+    const { data, error } = await _supabase.from('produtos').select('*').like('categoria', 'Docinho%');
+    if (error) {
+      console.error("Erro ao carregar docinhos:", error);
+      document.getElementById('docinhos-container').innerHTML = '<p style="color:#e74c3c;">Erro ao carregar cardápio de docinhos.</p>';
+      return;
+    }
+    if (data) {
+      catalogoDocinhosSupabase = data;
+      data.forEach(item => { qtdSelecionadaPorItem[item.id] = 25; });
+      renderizarDocinhosDinamico(data);
+    }
+  }
+
+  function renderizarDocinhosDinamico(lista) {
+    const container = document.getElementById('docinhos-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const categoriasMapeadas = [
+      { key: 'Docinho - Tradicional', label: 'Tradicionais 🤍' },
+      { key: 'Docinho - Especial', label: 'Especiais 🤍' },
+      { key: 'Docinho - Gourmet', label: 'Gourmets 🤍' }
+    ];
+
+    categoriasMapeadas.forEach(catObj => {
+      const itensCat = lista.filter(p => (p.categoria || '').toLowerCase() === catObj.key.toLowerCase());
+      if (itensCat.length === 0) return;
+
+      let gridHtml = '';
+      itensCat.forEach(item => {
+        const atual = qtdSelecionadaPorItem[item.id] || 25;
+        const imgUrl = item.image_url || 'images/amor.jpeg';
+        gridHtml += `
+          <div class="item-card">
+            <div>
+              <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px; border: 2px solid var(--vinho-2);">
+                <img src="${imgUrl}" alt="${item.name}" style="width:100%; height:100%; object-fit:cover;">
+              </div>
+              <h3>${item.name}</h3>
+              <!-- Sem exibir valor unitário -->
+              <div class="qty-selector-group">
+                <button class="qty-btn" onclick="mudarQtdVisualDoc('${item.id}', -25)">-25</button>
+                <span class="qty-display" id="disp-doc-${item.id}">${atual} un.</span>
+                <button class="qty-btn" onclick="mudarQtdVisualDoc('${item.id}', 25)">+25</button>
+              </div>
+            </div>
+            <button class="item-order" onclick="adicionarDocinhoCarrinhoDinamico('${item.id}')">Adicionar Lote +</button>
+          </div>
+        `;
+      });
+      container.innerHTML += `
+        <h3 class="menu-category-title"><i class="fa-solid fa-candy-cane"></i> ${catObj.label}</h3>
+        <div class="menu-grid">${gridHtml}</div>
+      `;
+    });
+  }
+
+  function mudarQtdVisualDoc(id, delta) {
+    let atual = qtdSelecionadaPorItem[id] || 25;
+    let novo = atual + delta;
+    if (novo < 25) novo = 25;
+    qtdSelecionadaPorItem[id] = novo;
+    const disp = document.getElementById(`disp-doc-${id}`);
+    if (disp) disp.innerText = `${novo} un.`;
+  }
+
+  function adicionarDocinhoCarrinhoDinamico(id) {
+    const prod = catalogoDocinhosSupabase.find(p => p.id === id);
+    if (!prod) return;
+    const qtd = qtdSelecionadaPorItem[id] || 25;
+    
+    // Verifica se já existe o mesmo docinho no carrinho
+    const existente = cart.find(i => i.id === prod.id);
+    if (existente) {
+      existente.quantity += qtd;
+    } else {
+      cart.push({ id: prod.id, name: prod.name, price: Number(prod.price), quantity: qtd, obs: `Docinho (12g)` });
+    }
+    
+    updateCartUI();
+    toggleCart(true);
+  }
+
+  function changeQuantity(index, delta) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity < 25) {
+      cart.splice(index, 1);
+    }
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const itemsContainer = document.getElementById('cart-items');
+    const formContainer = document.getElementById('cart-form');
+    const totalEl = document.getElementById('cart-total-value');
+    const badge = document.getElementById('cart-badge');
+    
+    if (!itemsContainer) return;
+    itemsContainer.innerHTML = '';
+    let subtotal = 0;
+    let totalItems = 0;
+
+    if (cart.length === 0) {
+      itemsContainer.innerHTML = '<p class="cart-empty">Seu carrinho está vazio.</p>';
+      formContainer.style.display = 'none';
+      taxaEntrega = 0;
+    } else {
+      formContainer.style.display = 'block';
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        totalItems += item.quantity;
+        const priceStr = itemTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        itemsContainer.innerHTML += `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <small style="color:var(--ouro);">${item.quantity} unidades</small>
+              <div class="cart-item-price">${priceStr}</div>
+            </div>
+            <div class="cart-item-controls">
+              <button class="cart-btn-qty" onclick="changeQuantity(${index}, -25)">-25</button>
+              <button class="cart-btn-qty" onclick="changeQuantity(${index}, 25)">+25</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    const valorFinal = subtotal + taxaEntrega;
+    totalEl.innerText = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    badge.innerText = totalItems;
+    badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+
+  function toggleCart(forceOpen = false) {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('cart-overlay');
+    if (forceOpen) { sidebar.classList.add('open'); overlay.classList.add('open'); }
+    else { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+  }
+
+  function toggleDeliveryForm() {
+    const isEntrega = document.querySelector('input[name="delivery-option"]:checked').value === "Entrega";
+    document.getElementById('address-container').style.display = isEntrega ? 'block' : 'none';
+    if (!isEntrega) taxaEntrega = 0;
+  }
+
+  async function buscarCEP() {
+    let cep = document.getElementById('cep').value.replace(/\D/g, '');
+    if (cep.length === 8) {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        document.getElementById('rua').value = data.logradouro;
+        document.getElementById('bairro').value = data.bairro;
+        let matched = false;
+        for (const [bairro, taxa] of Object.entries(tabelaFrete)) {
+          if (data.bairro.toLowerCase().includes(bairro.toLowerCase())) { taxaEntrega = taxa; matched = true; break; }
+        }
+        if (!matched) taxaEntrega = taxaPadrao;
+      }
+    }
+  }
+
+  function checkoutWhatsapp() {
+    if (cart.length === 0) { alert("Carrinho vazio!"); return; }
+    const customerName = document.getElementById('customer-name').value.trim();
+    const customerWhatsapp = document.getElementById('customer-whatsapp').value.trim();
+    const paymentMethod = document.getElementById('payment-method').value;
+    const deliveryOption = document.querySelector('input[name="delivery-option"]:checked').value;
+    const orderDate = document.getElementById('order-date').value;
+
+    if (!customerName || !customerWhatsapp) { alert("Preencha nome e WhatsApp."); return; }
+
+    let subtotal = 0;
+    cart.forEach(item => { subtotal += item.price * item.quantity; });
+    const valorFinal = subtotal + taxaEntrega;
+
+    let text = `Oi! Meu nome é *${customerName}* (Pedido de Docinhos):\n\n`;
+    cart.forEach(item => {
+      text += `- ${item.quantity}un. de ${item.name} (${(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})\n`;
+    });
+    text += `\n*TOTAL: ${valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}*`;
+    text += `\nData: ${orderDate} | Pgto: ${paymentMethod} | Entrega: ${deliveryOption}`;
+
+    window.open(`https://wa.me/554299894838?text=${encodeURIComponent(text)}`, '_blank');
+  }
+</script>
+
+</body>
+</html>

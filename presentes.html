@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentes — Dois Amores Doceria | Ponta Grossa, PR</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="catalog-page">
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <img src="images/logo.svg" alt="Logo Dois Amores">
+    </div>
+    <nav class="navlinks" id="navlinks">
+      <a href="index.html#novidades" onclick="closeMenu()"><i class="fa-solid fa-sparkles"></i> Novidades</a>
+      <a href="index.html#cardapio" onclick="closeMenu()"><i class="fa-solid fa-utensils"></i> Festival do Morango</a>
+      <a href="docinhos.html" onclick="closeMenu()"><i class="fa-solid fa-candy-cane"></i> Docinhos</a>
+      <a href="index.html#sobremesas" onclick="closeMenu()"><i class="fa-solid fa-cake-candles"></i> Sobremesas</a>
+      <a href="presentes.html" onclick="closeMenu()"><i class="fa-solid fa-gift"></i> Presentes</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- SEÇÃO: DIA DOS PAIS -->
+<section id="dia-dos-pais">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Homenagem & Sofisticação</p>
+      <h2>Dia dos Pais</h2>
+      <p style="color: var(--creme-dim); margin-top: 8px;">Surpreenda com kits e caixas exclusivas que unem o melhor da confeitaria artesanal em uma experiência marcante para celebrar a data.</p>
+    </div>
+    <div class="menu-grid" id="grid-pais">
+      <p class="empty-msg">Carregando produtos...</p>
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO: PARA SEU AMOR -->
+<section id="para-seu-amor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Afeto & Romantismo</p>
+      <h2>Para Seu Amor</h2>
+      <p style="color: var(--creme-dim); margin-top: 8px;">O equilíbrio perfeito entre morangos frescos selecionados e chocolate nobre para demonstrar todo o seu carinho em grande estilo.</p>
+    </div>
+    <div class="menu-grid" id="grid-amor">
+      <p class="empty-msg">Carregando produtos...</p>
+    </div>
+  </div>
+</section>
+
+<!-- SEÇÃO: PARA PRESENTEAR (SEM TEMA ESPECÍFICO) -->
+<section id="para-presentear">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Variedades</p>
+      <h2>Para Presentear</h2>
+      <p style="color: var(--creme-dim); margin-top: 8px;">Opções coringas e especiais sem tema específico para encantar em qualquer ocasião.</p>
+    </div>
+    <div class="menu-grid" id="grid-para-presentear">
+      <p class="empty-msg">Carregando produtos...</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="text-align: center;">
+    <span>Rua Dirceu Chagas, 37, Cara Cara, Ponta Grossa — PR · © Dois Amores Doceria</span>
+  </div>
+</footer>
+
+<button class="float-wa" onclick="toggleCart(true)">
+  <i class="fa-solid fa-bag-shopping"></i> <span>Ver Carrinho</span>
+  <div class="cart-badge" id="cart-badge">0</div>
+</button>
+
+<!-- CARRINHO LATERAL -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>Seu Pedido</h3>
+    <button class="close-cart" onclick="toggleCart(false)">×</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty">Seu carrinho está vazio.</p>
+  </div>
+  <div class="cart-form-container" id="cart-form" style="display: none;">
+    <div class="cart-form-group">
+      <label for="customer-name">Seu Nome:</label>
+      <input type="text" id="customer-name" class="cart-input" placeholder="Como podemos te chamar?">
+    </div>
+    <div class="cart-form-group">
+      <label for="customer-whatsapp">Seu WhatsApp (com DDD): *</label>
+      <input type="text" id="customer-whatsapp" class="cart-input" placeholder="Ex: 42999998888">
+    </div>
+    <div class="cart-form-group">
+      <label for="payment-method">Forma de Pagamento:</label>
+      <select id="payment-method" class="cart-input">
+        <option value="Pix">Pix</option>
+        <option value="Link de cartão de crédito">Link de cartão de crédito</option>
+        <option value="Dinheiro" id="opt-dinheiro" style="display: block;">Dinheiro (Apenas para Retirada)</option>
+      </select>
+    </div>
+    <div class="cart-form-group">
+      <label>Recebimento:</label>
+      <div class="cart-radio-group">
+        <label><input type="radio" name="delivery-option" value="Retirada" onchange="toggleDeliveryForm()" checked> Retirada</label>
+        <label><input type="radio" name="delivery-option" value="Entrega" onchange="toggleDeliveryForm()"> Entrega</label>
+      </div>
+    </div>
+    <div class="cart-form-group">
+      <label for="order-date">Data para Retirada / Entrega:</label>
+      <input type="date" id="order-date" class="cart-input">
+    </div>
+    <div id="address-container">
+      <div class="cart-form-group">
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" class="cart-input" placeholder="Somente números" maxlength="9" onblur="buscarCEP()">
+      </div>
+      <div class="cart-form-group">
+        <label for="rua">Rua / Logradouro:</label>
+        <input type="text" id="rua" class="cart-input" readonly>
+      </div>
+      <div class="grid-2-cols">
+        <div class="cart-form-group">
+          <label for="numero">Número:</label>
+          <input type="text" id="numero" class="cart-input" placeholder="Ex: 123">
+        </div>
+        <div class="cart-form-group">
+          <label for="complemento">Complemento:</label>
+          <input type="text" id="complemento" class="cart-input" placeholder="Casa, Apto...">
+        </div>
+      </div>
+      <div class="cart-form-group">
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" class="cart-input" readonly>
+      </div>
+    </div>
+    <div class="cart-form-group" style="margin-top: 15px;">
+      <label for="delivery-obs">Observação de Entrega / Retirada:</label>
+      <input type="text" id="delivery-obs" class="cart-input" placeholder="Ex: Entregar após as 18h...">
+    </div>
+  </div>
+  
+  <div class="cart-footer" id="cart-footer">
+    <div class="cart-totals-breakdown">
+      <div class="cart-totals-row">
+        <span>Subtotal:</span>
+        <span id="cart-subtotal-value">R$ 0,00</span>
+      </div>
+      <div class="cart-totals-row highlight" id="cart-delivery-row">
+        <span>Taxa de Entrega:</span>
+        <span id="cart-delivery-value">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-total">
+      <span>Total Final:</span>
+      <span id="cart-total-value">R$ 0,00</span>
+    </div>
+    <button class="btn" onclick="checkoutWhatsapp()">
+      Finalizar no WhatsApp 💬
+    </button>
+  </div>
+
+  <div id="cart-success" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; height: 100%;">
+    <span style="font-size: 4rem; margin-bottom: 16px;">✅</span>
+    <h3 style="color: var(--creme); font-size: 1.5rem; margin-bottom: 12px; font-family: 'Fraunces', serif;">Tudo pronto!</h3>
+    <p style="color: var(--creme-dim); line-height: 1.5; margin-bottom: 24px;">Seu pedido foi gerado e enviado para o WhatsApp.<br>Aguarde nossa confirmação por lá!</p>
+    <button class="btn ghost" onclick="resetCart()">Voltar</button>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const navlinks = document.getElementById('navlinks');
+  if (toggle && navlinks) {
+    toggle.addEventListener('click', () => navlinks.classList.toggle('open'));
+  }
+  function closeMenu(){ 
+    const links = document.getElementById('navlinks');
+    if (links) links.classList.remove('open'); 
+  }
+
+  const SUPABASE_URL = 'https://ecejppxklzrleumionqt.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'sb_publishable_BuvSH51vbG4ln9sUZm43RQ_qe9WOx1L'; 
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let produtosPresentes = [];
+  let cart = [];
+  let taxaEntrega = 0;
+  let apenasEncomendaAtivo = false;
+
+  const tabelaFrete = {
+    "Cara Cara": 10.00, "Uvaranas": 12.00, "Centro": 15.00, "Oficinas": 12.00,
+    "Estrela": 15.00, "Jardim Carvalho": 15.00, "Contorno": 18.00, "Nova Rússia": 15.00,
+    "Neves": 15.00, "Olarias": 12.00, "Boa Vista": 20.00, "Órfãs": 15.00
+  };
+  const taxaPadrao = 18.00;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const hojeIso = new Date().toISOString().split('T')[0];
+    const inputData = document.getElementById('order-date');
+    if (inputData) {
+      inputData.value = hojeIso;
+      inputData.min = hojeIso;
+    }
+    carregarPresentesPorCategoria();
+    verificarModoEncomenda();
+  });
+
+  async function verificarModoEncomenda() {
+    const { data } = await _supabase.from('configuracoes').select('valor').eq('chave', 'apenas_encomenda').single();
+    if (data) {
+      apenasEncomendaAtivo = (data.valor === 'true');
+      updateCartUI();
+    }
+  }
+
+  async function carregarPresentesPorCategoria() {
+    const { data, error } = await _supabase.from('produtos').select('*');
+    if (error) {
+      console.error('Erro ao buscar presentes:', error);
+      return;
+    }
+    data.sort((a, b) => a.name.localeCompare(b.name));
+
+    produtosPresentes = data;
+    const gridPais = document.getElementById('grid-pais');
+    const gridAmor = document.getElementById('grid-amor');
+    const gridParaPresentear = document.getElementById('grid-para-presentear');
+    
+    gridPais.innerHTML = '';
+    gridAmor.innerHTML = '';
+    gridParaPresentear.innerHTML = '';
+
+    let contadorPais = 0;
+    let contadorAmor = 0;
+    let contadorParaPresentear = 0;
+
+    data.forEach(prod => {
+      const categoria = (prod.categoria || '').toLowerCase().trim();
+      if (categoria === 'festival') return;
+
+      const priceFormatted = prod.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const descricaoHtml = prod.descricao ? `<p class="item-desc">${prod.descricao}</p>` : `<p class="item-desc"></p>`;
+      
+      const cardHtml = `
+        <div class="item-card">
+          <div>
+            <div class="item-photo"><img src="${prod.image_url || 'images/caixa.jpeg'}" alt="${prod.name}"></div>
+            <h3>${prod.name}</h3>
+            ${descricaoHtml}
+          </div>
+          <div>
+            <div class="item-price">${priceFormatted}</div>
+            <button class="item-order" onclick="addToCart('${prod.id}')">Adicionar ao carrinho +</button>
+          </div>
+        </div>
+      `;
+
+      if (categoria.includes('pai') || categoria.includes('pais')) {
+        gridPais.innerHTML += cardHtml;
+        contadorPais++;
+      } else if (categoria.includes('amor') || categoria.includes('namorados')) {
+        gridAmor.innerHTML += cardHtml;
+        contadorAmor++;
+      } else if (categoria.includes('para presentear') || categoria.includes('presentear')) {
+        gridParaPresentear.innerHTML += cardHtml;
+        contadorParaPresentear++;
+      }
+    });
+
+    if (contadorPais === 0) gridPais.innerHTML = `<p class="empty-msg">Nenhum produto cadastrado com a categoria correspondente.</p>`;
+    if (contadorAmor === 0) gridAmor.innerHTML = `<p class="empty-msg">Nenhum produto cadastrado com a categoria correspondente.</p>`;
+    if (contadorParaPresentear === 0) gridParaPresentear.innerHTML = `<p class="empty-msg">Nenhum produto cadastrado em "Para Presentear" ainda.</p>`;
+  }
+
+  function addToCart(productId) {
+    const produto = produtosPresentes.find(p => p.id === productId);
+    if (!produto) return;
+
+    const itemNoCarrinho = cart.find(item => item.id === productId);
+    if (itemNoCarrinho) {
+      itemNoCarrinho.quantity += 1;
+    } else {
+      cart.push({ id: produto.id, name: produto.name, price: produto.price, quantity: 1, obs: '' });
+    }
+    
+    updateCartUI();
+    toggleCart(true);
+  }
+
+  function changeQuantity(index, delta) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity <= 0) cart.splice(index, 1);
+    updateCartUI();
+  }
+
+  function toggleDeliveryForm() {
+    const isEntrega = document.querySelector('input[name="delivery-option"]:checked').value === "Entrega";
+    const addressContainer = document.getElementById('address-container');
+    const deliveryRow = document.getElementById('cart-delivery-row');
+    const optDinheiro = document.getElementById('opt-dinheiro');
+    const paymentSelect = document.getElementById('payment-method');
+    
+    if (isEntrega) {
+      addressContainer.style.display = 'block';
+      deliveryRow.style.display = 'flex';
+      optDinheiro.style.display = 'none'; 
+      if (paymentSelect.value === "Dinheiro") paymentSelect.value = "Pix"; 
+      if (document.getElementById('bairro').value !== '') calcularTaxa(document.getElementById('bairro').value);
+    } else {
+      addressContainer.style.display = 'none';
+      deliveryRow.style.display = 'none';
+      optDinheiro.style.display = 'block'; 
+      taxaEntrega = 0;
+    }
+    updateCartUI();
+  }
+
+  async function buscarCEP() {
+    let cep = document.getElementById('cep').value.replace(/\D/g, '');
+    if (cep.length === 8) {
+      document.getElementById('rua').value = "Buscando...";
+      document.getElementById('bairro').value = "Buscando...";
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        if (data.erro) {
+          alert("CEP não encontrado.");
+          document.getElementById('rua').value = "";
+          document.getElementById('bairro').value = "";
+          return;
+        }
+        document.getElementById('rua').value = data.logradouro;
+        document.getElementById('bairro').value = data.bairro;
+        calcularTaxa(data.bairro);
+        document.getElementById('numero').focus();
+      } catch (error) {
+        alert("Erro ao buscar CEP.");
+      }
+    }
+  }
+
+  function calcularTaxa(bairroBuscado) {
+    let matched = false;
+    for (const [bairro, taxa] of Object.entries(tabelaFrete)) {
+      if (bairroBuscado.toLowerCase().includes(bairro.toLowerCase())) {
+        taxaEntrega = taxa;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) taxaEntrega = taxaPadrao;
+    document.getElementById('cart-delivery-value').innerText = taxaEntrega.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const itemsContainer = document.getElementById('cart-items');
+    const formContainer = document.getElementById('cart-form');
+    const cartFooter = document.getElementById('cart-footer');
+    const subtotalEl = document.getElementById('cart-subtotal-value');
+    const totalEl = document.getElementById('cart-total-value');
+    const badge = document.getElementById('cart-badge');
+    
+    itemsContainer.innerHTML = '';
+    let subtotal = 0;
+    let totalItems = 0;
+
+    if (cart.length === 0) {
+      itemsContainer.innerHTML = '<p class="cart-empty">Seu carrinho está vazio.</p>';
+      formContainer.style.display = 'none';
+      taxaEntrega = 0;
+    } else {
+      formContainer.style.display = 'block';
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        totalItems += item.quantity;
+        const priceStr = itemTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        itemsContainer.innerHTML += `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <div class="cart-item-price">${priceStr}</div>
+            </div>
+            <div class="cart-item-controls">
+              <button class="cart-btn-qty" onclick="changeQuantity(${index}, -1)">-</button>
+              <span>${item.quantity}</span>
+              <button class="cart-btn-qty" onclick="changeQuantity(${index}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (apenasEncomendaAtivo) {
+      let aviso = document.getElementById('aviso-encomenda');
+      if (!aviso) {
+        aviso = document.createElement('p');
+        aviso.id = 'aviso-encomenda';
+        aviso.style.color = '#c9974a';
+        aviso.style.fontSize = '0.8rem';
+        aviso.style.textAlign = 'center';
+        aviso.style.marginBottom = '10px';
+        aviso.innerText = "📅 Estamos operando APENAS POR ENCOMENDA. Agende seu pedido para uma data futura.";
+        cartFooter.prepend(aviso);
+      }
+    } else {
+      const aviso = document.getElementById('aviso-encomenda');
+      if (aviso) aviso.remove();
+    }
+
+    let valorFinal = subtotal + taxaEntrega;
+    subtotalEl.innerText = subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    totalEl.innerText = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    badge.innerText = totalItems;
+    badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+
+  function toggleCart(forceOpen = false) {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('cart-overlay');
+    if (forceOpen) {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    } else {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+      if (document.getElementById('cart-success').style.display === 'flex') {
+        setTimeout(resetCart, 300);
+      }
+    }
+  }
+
+  function resetCart() {
+    cart = [];
+    taxaEntrega = 0;
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-whatsapp').value = '';
+    const hojeIso = new Date().toISOString().split('T')[0];
+    document.getElementById('order-date').value = hojeIso;
+    document.getElementById('cep').value = '';
+    document.getElementById('rua').value = '';
+    document.getElementById('numero').value = '';
+    document.getElementById('complemento').value = '';
+    document.getElementById('bairro').value = '';
+    document.getElementById('delivery-obs').value = '';
+    document.getElementById('payment-method').selectedIndex = 0;
+    document.querySelector('input[name="delivery-option"][value="Retirada"]').checked = true;
+    document.getElementById('address-container').style.display = 'none';
+    document.getElementById('cart-delivery-row').style.display = 'none';
+    document.getElementById('cart-items').style.display = 'block';
+    document.getElementById('cart-form').style.display = 'block';
+    document.getElementById('cart-footer').style.display = 'block';
+    document.getElementById('cart-success').style.display = 'none';
+    updateCartUI();
+    toggleCart(false);
+  }
+
+  async function checkoutWhatsapp() {
+    if (cart.length === 0) {
+      alert("Seu carrinho está vazio!");
+      return;
+    }
+
+    const customerName = document.getElementById('customer-name').value.trim();
+    const customerWhatsapp = document.getElementById('customer-whatsapp').value.trim();
+    const orderDate = document.getElementById('order-date').value;
+    const paymentMethod = document.getElementById('payment-method').value;
+    const deliveryOption = document.querySelector('input[name="delivery-option"]:checked').value;
+    const deliveryObs = document.getElementById('delivery-obs').value.trim();
+    const hoje = new Date().toISOString().split('T')[0];
+
+    if (!customerName) {
+      alert("Por favor, preencha o seu nome.");
+      document.getElementById('customer-name').focus();
+      return;
+    }
+
+    if (!customerWhatsapp) {
+      alert("Por favor, preencha o seu WhatsApp.");
+      document.getElementById('customer-whatsapp').focus();
+      return;
+    }
+
+    if (apenasEncomendaAtivo) {
+      if (!orderDate) {
+        alert("⚠️ Atenção: Estamos operando apenas por encomenda. Por favor, selecione uma data futura para o seu pedido.");
+        document.getElementById('order-date').focus();
+        return;
+      }
+      if (orderDate === hoje) {
+        alert("⚠️ Este item é apenas sob encomenda. Por favor, escolha uma data a partir de amanhã.");
+        document.getElementById('order-date').focus();
+        return;
+      }
+    }
+
+    let addressText = "";
+    let enderecoCompleto = "Retirada no Local";
+    
+    if (deliveryOption === "Entrega") {
+      const rua = document.getElementById('rua').value;
+      const numero = document.getElementById('numero').value;
+      const bairro = document.getElementById('bairro').value;
+      const complemento = document.getElementById('complemento').value;
+      if (!rua || !numero) {
+        alert("Preencha o CEP e o número.");
+        document.getElementById('cep').focus();
+        return;
+      }
+      addressText = `\n*Endereço de Entrega:*\n${rua}, Nº ${numero}\nBairro: ${bairro}`;
+      if (complemento) addressText += `\nComplemento: ${complemento}`;
+      enderecoCompleto = `${rua}, Nº ${numero} - Bairro: ${bairro}`;
+      if (complemento) enderecoCompleto += ` (${complemento})`;
+    }
+
+    let subtotal = 0;
+    cart.forEach(item => { subtotal += item.price * item.quantity; });
+    const valorFinal = subtotal + taxaEntrega;
+    const pedidoId = 'ped_' + Date.now();
+    const dataAtualStr = new Date().toLocaleDateString('pt-BR');
+    const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    let dataAgendadaFormatada = orderDate;
+    if (orderDate) {
+      let partes = orderDate.split('-');
+      if (partes.length === 3) dataAgendadaFormatada = `${partes}/${partes}/${partes[0]}`;
+    }
+
+    const novoPedidoSupabase = {
+      id_pedido: pedidoId,
+      data: dataAtualStr,
+      hora: horaAtual,
+      cliente: customerName,
+      whatsapp: customerWhatsapp,
+      itens: cart,
+      total: valorFinal,
+      pagamento: paymentMethod,
+      entrega: deliveryOption,
+      obs_entrega: deliveryObs,
+      status: 'aguardando',
+      data_agendada: orderDate || null,
+      endereco: enderecoCompleto
+    };
+
+    const { error: erroPedido } = await _supabase.from('pedidos').insert([novoPedidoSupabase]);
+    if (erroPedido) {
+      alert("Erro ao salvar o pedido: " + erroPedido.message);
+      return;
+    }
+
+    let text = `Oi! Meu nome é *${customerName}* e gostaria de fazer o seguinte pedido de Presentes:\n\n`;
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      text += `- ${item.quantity}x ${item.name} (${itemTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})\n`;
+    });
+
+    text += `\n*Subtotal:* ${subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+    if (deliveryOption === "Entrega") {
+       text += `\n*Taxa de Entrega:* ${taxaEntrega.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
+    }
+    text += `\n*TOTAL DO PEDIDO: ${valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}*`;
+    text += `\n\n*Detalhes:*`;
+    text += `\nData Agendada: *${dataAgendadaFormatada}*`;
+    text += `\nPagamento: ${paymentMethod}`;
+    text += `\nRecebimento: ${deliveryOption}`;
+    text += `\nWhatsApp: ${customerWhatsapp}`;
+    if (deliveryObs) text += `\nObs: ${deliveryObs}`;
+    text += addressText;
+    text += "\n\nAnotado! O pedido só será confirmado após o envio do comprovante do pagamento.";
+
+    const encodedText = encodeURIComponent(text);
+    window.open(`https://wa.me/554299894838?text=${encodedText}`, '_blank');
+
+    document.getElementById('cart-items').style.display = 'none';
+    document.getElementById('cart-form').style.display = 'none';
+    document.getElementById('cart-footer').style.display = 'none';
+    document.getElementById('cart-success').style.display = 'flex';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dois Amores Doceria — Festival do Morango | Ponta Grossa, PR</title>
+<meta name="description" content="Doceria artesanal em Ponta Grossa, PR. Confira o Festival do Morango e peça pelo WhatsApp.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <img src="images/logo.svg" alt="Logo Dois Amores">
+    </div>
+    <nav class="navlinks" id="navlinks">
+      <a href="#novidades"><i class="fa-solid fa-sparkles"></i> Novidades</a>
+      <a href="#cardapio"><i class="fa-solid fa-utensils"></i> Festival do Morango</a>
+      <a href="docinhos.html"><i class="fa-solid fa-candy-cane"></i> Docinhos</a>
+      <a href="#sobremesas"><i class="fa-solid fa-cake-candles"></i> Sobremesas</a>
+      <a href="presentes.html"><i class="fa-solid fa-gift"></i> Presentes</a>
+    </nav>
+  </div>
+</header>
+
+<section class="banner-coletivo-section" id="banner-coletivo">
+  <div class="wrap banner-coletivo-wrap">
+    <a href="#coletivo" class="banner-coletivo-link" aria-label="Aproveite o Frete Grátis no Pedido Coletivo">
+      <img src="images/coletivo.png" alt="Pedido Coletivo tem Frete Grátis — Dois Amores Doceria" class="banner-coletivo-img">
+    </a>
+  </div>
+</section>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">Festival do Morango · Ponta Grossa, PR</p>
+      <div class="status-loja" id="status-loja">
+        <span class="status-dot"></span> 
+        <span id="status-text">Verificando horário...</span>
+      </div>
+      <h1>Duas metades.<br>Um <em>amor</em> só.</h1>
+      <p class="lede">Criado para reunir os apaixonados por morango e chocolate, o festival traz um cardápio exclusivo com receitas artesanais, sabores irresistíveis e novidades em cada edição. Com atendimento exclusivo por <strong><em>delivery e retirada</em></strong>.</p>
+      <div class="hero-ctas">
+        <a class="btn" href="#cardapio">Ver o Festival do Morango</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-selo-container">
+        <img src="images/svg/selo_festival.svg" alt="Selo Festival do Morango">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="sobre">
+  <div class="wrap about-grid">
+    <div class="about-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span class="eyebrow">Avaliações do Google ⭐</span>
+        <span id="review-counter" style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">1 / 7</span>
+      </div>
+      
+      <div class="review-stars">
+        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+      </div>
+      
+      <p class="review-text" id="review-text-content">
+        “Os doces de morango são maravilhosos! Muito bem feitos, com ingredientes de ótima qualidade, sabor delicioso e na medida certa de doce. O morango estava fresquinho e a apresentação é linda, tudo muito caprichado. Dá para perceber o cuidado em cada detalhe. Super recomendo! 🍓”
+      </p>
+      
+      <div class="review-author">
+        <span id="review-author-name">— Taisa Desplanches</span>
+        <div class="review-controls">
+          <button class="review-btn" onclick="mudarAvaliacao(-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="review-btn" onclick="mudarAvaliacao(1)" aria-label="Próxima"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <p class="eyebrow">Sobre a doceria</p>
+      <h2>A essência do sabor artesanal.</h2>
+      <ul class="about-list">
+        <li>🍓 Ingredientes selecionados, porque qualidade faz toda a diferença.</li>
+        <li>🤎 Receitas artesanais, preparadas com carinho e atenção aos detalhes.</li>
+        <li>✨ Novidades e sabores exclusivos, inspirados nas tendências da confeitaria.</li>
+        <li>🎁 Doces para celebrar, presentear e tornar qualquer ocasião ainda mais especial.</li>
+      </ul>
+      <p style="margin-top:22px; color:var(--creme-dim); font-style: italic;">Mais do que criar doces, criamos experiências que fazem parte das suas melhores lembranças.</p>
+    </div>
+  </div>
+</section>
+
+<section class="novidades-section" id="novidades">
+  <div class="bg-video-container">
+    <video autoplay muted loop playsinline>
+      <source src="/video/morango_voando.mp4" type="video/mp4">
+    </video>
+    <div class="bg-video-overlay"></div>
+  </div>
+  <div class="wrap">
+    <div class="menu-top" style="margin-bottom: 0;">
+      <div class="section-head" style="margin-bottom:0;">
+        <p class="eyebrow"><i class="fa-solid fa-sparkles" style="color: var(--ouro);"></i> Lançamentos Exclusivos</p>
+        <h2>Novidades do Festival</h2>
+        <p>Confira os itens mais recentes e as grandes apostas desta edição para você experimentar em primeira mão!</p>
+      </div>
+    </div>
+    <div class="novidades-grid" id="novidades-grid"></div>
+  </div>
+</section>
+
+<section class="menu" id="cardapio">
+  <div class="wrap">
+    <div class="menu-top">
+      <div class="section-head" style="margin-bottom:0;">
+        <p class="eyebrow">Cardápio atual</p>
+        <h2>Festival do Morango</h2>
+        <p>São diversas opções separadas por categorias, preparadas com ingredientes frescos e muita qualidade.<br><br>Escolha seus favoritos, adicione os produtos ao carrinho e envie seu pedido completo pelo WhatsApp para garantir sua reserva.</p>
+      </div>
+    </div>
+    
+    <div id="menu-categorias-container"></div>
+  </div>
+</section>
+
+<section class="pedido-coletivo-destaque" id="coletivo">
+  <div class="wrap">
+    <div class="coletivo-destaque-card">
+      <div class="coletivo-destaque-info">
+        <p class="eyebrow" style="margin-bottom: 6px;">Escritórios & Grupos</p>
+        <h2>Faça um Pedido Coletivo 👥</h2>
+        <p>Junte os pedidos do escritório ou grupo em uma única entrega com antecedência mínima de 2 dias.</p>
+      </div>
+      <div>
+        <button class="btn" onclick="abrirModalPedidoColetivo()" style="background: var(--ouro); color: var(--carvao);">
+          <i class="fa-solid fa-users"></i> Iniciar Pedido Coletivo
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="menu" id="sobremesas" style="border-top: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="menu-top">
+      <div class="section-head" style="margin-bottom:0;">
+        <p class="eyebrow">Delícias Artesanais</p>
+        <h2>Sobremesas</h2>
+        <p>Opções incríveis para encerrar sua refeição com um toque especial de doçura e sabor.</p>
+      </div>
+    </div>
+    <div class="menu-grid" id="grid-sobremesas"></div>
+  </div>
+</section>
+
+<section class="steps" id="como-pedir">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Como pedir</p>
+      <h2>Do site para o WhatsApp em 3 passos</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Escolha os doces</h3>
+        <p>Percorra o cardápio do Festival do Morango e vá adicionando ao carrinho os sabores que você deseja pedir.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Revise o carrinho</h3>
+        <p>Abra o carrinho (no botão no canto da tela) para revisar as quantidades e ver o valor total da sua compra.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Envie para a Doceria</h3>
+        <p>Preencha seu nome, selecione a forma de pagamento e entrega (ou retirada). O site já vai preparar a mensagem certinha pra gente no WhatsApp!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="local" id="local">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Onde estamos</p>
+      <h2>Ponta Grossa, bairro Cará-Cará</h2>
+    </div>
+    <div class="local-grid">
+      <div class="local-info">
+        <div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-solid fa-location-dot"></i></span>
+            <div>
+              <h4>Endereço (Para Retirada)</h4>
+              <p>Rua Dirceu Chagas, 37 — Cará-Cará<br>Ponta Grossa, PR · CEP 84033-894<br><small style="color:var(--ouro); display:block; margin-top:4px;">*Trabalhamos apenas com Delivery e Retirada</small></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-solid fa-phone"></i></span>
+            <div><h4>WhatsApp</h4><p>(42) 9989-4838</p></div>
+          </div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-brands fa-instagram"></i></span>
+            <div><h4>Instagram</h4><p><a href="https://www.instagram.com/doisamoresdoceriapg/" target="_blank" rel="noopener" style="text-decoration:underline;">@doisamoresdoceriapg</a></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-embed">
+        <iframe src="https://www.google.com/maps?q=Rua+Dirceu+Chagas,+37,+Cará-Cará,+Ponta+Grossa+-+PR,+84033-889,+Brasil&output=embed" loading="lazy" title="Mapa"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">Dois Amores Doceria</div>
+      <div class="footer-links">
+        <a href="#novidades"><i class="fa-solid fa-sparkles"></i> Novidades</a>
+        <a href="#cardapio"><i class="fa-solid fa-utensils"></i> Festival do Morango</a>
+        <a href="docinhos.html"><i class="fa-solid fa-candy-cane"></i> Docinhos</a>
+        <a href="#sobremesas"><i class="fa-solid fa-cake-candles"></i> Sobremesas</a>
+        <a href="presentes.html"><i class="fa-solid fa-gift"></i> Presentes</a>
+      </div>
+    </div>
+    <div style="margin-top: 20px; text-align: center;">
+      <button onclick="tentarEntrarAdmin()" style="background:none; border:none; color:rgba(247,234,217,0.15); font-size:0.7rem; cursor:pointer;" title="Painel Administrativo">
+        ⚙️ Área Restrita
+      </button>
+    </div>
+    <div class="footer-fine">
+      <span>Rua Dirceu Chagas, 37, Cará-Cará, Ponta Grossa — PR · CEP 84033-889 · © Dois Amores Doceria</span>
+      <span class="footer-dev">Desenvolvido por Aston Studio Digital</span>
+    </div>
+  </div>
+</footer>
+
+<button class="float-wa" onclick="toggleCart(true)">
+  <i class="fa-solid fa-bag-shopping"></i> <span>Ver Carrinho</span>
+  <div class="cart-badge" id="cart-badge">0</div>
+</button>
+
+<!-- MODAL PEDIDO COLETIVO -->
+<div class="custom-modal-overlay" id="modal-pedido-coletivo">
+  <div class="custom-modal" style="max-width: 780px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);"><i class="fa-solid fa-users"></i> Novo Pedido Coletivo</h3>
+      <button onclick="fecharModalPedidoColetivo()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+    <p style="margin-bottom: 20px;">Junte os pedidos do escritório ou grupo em uma única entrega! Antecedência mínima de 2 dias.</p>
+    
+    <div style="background: rgba(201,151,74,0.05); border: 1px solid rgba(201,151,74,0.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <h4 style="margin: 0 0 12px 0; color: var(--ouro); font-size: 0.95rem;"><i class="fa-solid fa-user-shield"></i> Dados do Responsável</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div>
+          <label style="font-size: 0.75rem; color: var(--creme-dim);">Nome do Responsável:</label>
+          <input type="text" id="coletivo-resp-nome" class="cart-input" placeholder="Seu nome completo">
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--creme-dim);">WhatsApp:</label>
+          <input type="text" id="coletivo-resp-zap" class="cart-input" placeholder="42999998888">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+        <div>
+          <label for="coletivo-resp-data" style="font-size: 0.75rem; color: var(--creme-dim);">Data da Encomenda (Mínimo 2 dias):</label>
+          <input type="date" id="coletivo-resp-data" class="cart-input">
+        </div>
+        <div>
+          <label for="coletivo-cep" style="font-size: 0.75rem; color: var(--creme-dim);">CEP:</label>
+          <input type="text" id="coletivo-cep" class="cart-input" placeholder="Somente números" maxlength="9" onblur="buscarCEPColetivo()">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-top: 12px;">
+        <div>
+          <label for="coletivo-rua" style="font-size: 0.75rem; color: var(--creme-dim);">Rua / Logradouro:</label>
+          <input type="text" id="coletivo-rua" class="cart-input" readonly>
+        </div>
+        <div>
+          <label for="coletivo-numero" style="font-size: 0.75rem; color: var(--creme-dim);">Número:</label>
+          <input type="text" id="coletivo-numero" class="cart-input" placeholder="Ex: 123">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+        <div>
+          <label for="coletivo-complemento" style="font-size: 0.75rem; color: var(--creme-dim);">Complemento:</label>
+          <input type="text" id="coletivo-complemento" class="cart-input" placeholder="Casa, apartamento...">
+        </div>
+        <div>
+          <label for="coletivo-bairro" style="font-size: 0.75rem; color: var(--creme-dim);">Bairro:</label>
+          <input type="text" id="coletivo-bairro" class="cart-input" readonly>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin: 0 0 10px 0; color: var(--creme); font-size: 1rem;"><i class="fa-solid fa-clipboard-user"></i> Pedidos dos Colaboradores</h4>
+    <div id="coletivo-colaboradores-container"></div>
+
+    <button class="btn ghost" onclick="adicionarNovoColaborador()" style="width: 100%; border-style: dashed; margin-bottom: 20px; justify-content: center; font-size: 0.88rem;">
+      + Adicionar Outro Colaborador
+    </button>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 16px;">
+      <div style="display: grid; gap: 4px; color: var(--creme-dim); font-size: 0.9rem;">
+        <div style="display: flex; justify-content: space-between; gap: 20px;"><span>Subtotal:</span><span id="coletivo-subtotal">R$ 0,00</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 20px;"><span>Frete:</span><span id="coletivo-frete-valor">Informe o CEP</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 4px; font-size: 1rem; font-weight: bold; color: var(--creme);"><span>Total Geral:</span><span id="coletivo-total-geral" style="color: var(--morango);">R$ 0,00</span></div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button class="btn ghost" onclick="fecharModalPedidoColetivo()" style="flex: 1; justify-content: center;">Cancelar</button>
+      <button class="btn" onclick="confirmarPedidoColetivo()" style="flex: 2; justify-content: center; background: var(--ouro); color: var(--carvao);">
+        Confirmar e Enviar Pedido Coletivo 💬
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALHES/ITENS DO PEDIDO INDIVIDUAL (CHECK DE ITENS COM FILTRO) -->
+<div class="custom-modal-overlay" id="modal-detalhes-pedido">
+  <div class="custom-modal" style="max-width: 600px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);" id="modal-detalhes-titulo">Itens do Pedido</h3>
+      <button onclick="fecharModalDetalhesPedido()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--creme-dim); margin-bottom: 12px;">Marque os itens à medida que forem sendo produzidos ou separados:</p>
+    
+    <div style="margin-bottom: 14px;">
+      <input type="text" id="filtro-itens-pedido" class="cart-input" placeholder="🔍 Filtrar por nome do produto ou sabor..." oninput="filtrarItensDetalhesPedido()">
+    </div>
+
+    <div id="modal-detalhes-itens-container" style="margin-bottom: 20px; max-height: 45vh; overflow-y: auto;"></div>
+    
+    <div style="display: flex; justify-content: flex-end;">
+      <button class="btn" onclick="fecharModalDetalhesPedido()" style="padding: 10px 24px; font-size: 0.85rem; background: var(--ouro); color: var(--carvao);">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALHES/ITENS DO PEDIDO COLETIVO (CHECK DE ITENS COM FILTRO) -->
+<div class="custom-modal-overlay" id="modal-detalhes-coletivo">
+  <div class="custom-modal" style="max-width: 650px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);" id="modal-detalhes-coletivo-titulo">Itens do Pedido Coletivo</h3>
+      <button onclick="fecharModalDetalhesColetivo()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--creme-dim); margin-bottom: 12px;">Marque os itens dos colaboradores à medida que forem sendo produzidos:</p>
+    
+    <div style="margin-bottom: 14px;">
+      <input type="text" id="filtro-itens-coletivo" class="cart-input" placeholder="🔍 Filtrar por colaborador ou sabor..." oninput="filtrarItensDetalhesColetivo()">
+    </div>
+
+    <div id="modal-detalhes-coletivo-itens-container" style="margin-bottom: 20px; max-height: 45vh; overflow-y: auto;"></div>
+    
+    <div style="display: flex; justify-content: flex-end;">
+      <button class="btn" onclick="fecharModalDetalhesColetivo()" style="padding: 10px 24px; font-size: 0.85rem; background: var(--ouro); color: var(--carvao);">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PEDIDO -->
+<div class="custom-modal-overlay" id="modal-editar-pedido">
+  <div class="custom-modal" style="max-width: 680px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);"><i class="fa-solid fa-pen-to-square"></i> Editar Pedido</h3>
+      <button onclick="fecharModalEditarPedido()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+    <input type="hidden" id="edit-pedido-id-alvo">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">Nome do Cliente:</label>
+        <input type="text" id="edit-pedido-cliente" class="cart-input" style="padding: 8px;">
+      </div>
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">WhatsApp:</label>
+        <input type="text" id="edit-pedido-zap" class="cart-input" style="padding: 8px;">
+      </div>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <label for="edit-pedido-data-agendada" style="font-size: 0.75rem; color: var(--creme-dim);">Data para Retirada / Entrega:</label>
+      <input type="date" id="edit-pedido-data-agendada" class="cart-input" style="padding: 8px;">
+    </div>
+    
+    <div style="margin-bottom: 16px;">
+      <label style="font-size: 0.75rem; color: var(--creme-dim);">Taxa de Frete / Entrega (R$):</label>
+      <input type="number" step="0.01" id="edit-pedido-frete" class="cart-input" style="padding: 8px;" oninput="renderizarItensEdicaoPedido()">
+    </div>
+
+    <h4 style="margin: 0 0 10px 0; color: var(--creme); font-size: 0.95rem;">Itens do Pedido:</h4>
+    <div id="edit-pedido-itens-container" style="margin-bottom: 16px; max-height: 35vh; overflow-y: auto;"></div>
+    <button class="btn ghost" onclick="adicionarItemEdicaoPedido()" style="width: 100%; border-style: dashed; margin-bottom: 16px; justify-content: center; font-size: 0.82rem;">+ Adicionar Produto</button>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 16px;">
+      <span style="font-weight: bold; color: var(--creme);">Novo Total (com frete):</span>
+      <span id="edit-pedido-total-preview" style="font-size: 1.2rem; font-weight: bold; color: var(--morango);">R$ 0,00</span>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button class="btn ghost" onclick="fecharModalEditarPedido()" style="flex: 1; justify-content: center;">Cancelar</button>
+      <button class="btn" onclick="salvarEdicaoPedido()" style="flex: 2; justify-content: center; background: var(--ouro); color: var(--carvao);">Salvar Alterações</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ESCOLHA SABORES CAIXA MISTA (GERAL / CARRINHO) -->
+<div class="custom-modal-overlay" id="custom-modal-overlay">
+  <div class="custom-modal">
+    <h3>Monte sua Caixa Mista</h3>
+    <p>Escolha os sabores para os <strong>6 morangos</strong> da sua caixa (exceto espetos):</p>
+    <div style="background: rgba(201,151,74,0.08); border: 1px dashed var(--ouro); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.82rem; color: var(--creme);">
+      💡 <b>Regra da Caixa:</b> R$ 55,00 com sabores tradicionais (até R$ 10) ou R$ 65,00 se incluir sabores gourmet (acima de R$ 10).
+    </div>
+    <div id="flavor-list-container"></div>
+    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <span id="flavor-count-status" style="font-size: 0.85rem; color: var(--ouro); display: block;">Restantes: 6</span>
+        <span id="flavor-price-preview" style="font-size: 0.88rem; color: var(--morango); font-weight: bold; display: block;">Preço estimado: R$ 55,00</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn ghost" onclick="fecharModalCaixa()" style="padding: 8px 14px; font-size: 0.85rem;">Cancelar</button>
+        <button class="btn" onclick="confirmarCaixaMista()" style="padding: 8px 16px; font-size: 0.85rem;">Adicionar ao Carrinho</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ESCOLHA SABORES CAIXA MISTA (PEDIDO COLETIVO) -->
+<div class="custom-modal-overlay" id="coletivo-modal-overlay">
+  <div class="custom-modal">
+    <h3>Monte a Caixa Mista (Pedido Coletivo)</h3>
+    <p>Escolha os sabores para os <strong>6 morangos</strong> desta caixa:</p>
+    <div style="background: rgba(201,151,74,0.08); border: 1px dashed var(--ouro); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.82rem; color: var(--creme);">
+      💡 <b>Regra da Caixa:</b> R$ 55,00 (tradicionais) ou R$ 65,00 (se incluir gourmet).
+    </div>
+    <div id="coletivo-flavor-list-container"></div>
+    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <span id="coletivo-flavor-count-status" style="font-size: 0.85rem; color: var(--ouro); display: block;">Restantes: 6</span>
+        <span id="coletivo-flavor-price-preview" style="font-size: 0.88rem; color: var(--morango); font-weight: bold; display: block;">Preço da Caixa: R$ 55,00</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn ghost" onclick="fecharColetivoModalCaixa()" style="padding: 8px 14px; font-size: 0.85rem;">Cancelar</button>
+        <button class="btn" onclick="confirmarColetivoCaixaMista()" style="padding: 8px 16px; font-size: 0.85rem;">Confirmar Caixa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ESCOLHA SABORES CAIXA MISTA (VERSÃO ADMIN MANUAL) -->
+<div class="custom-modal-overlay" id="admin-custom-modal-overlay">
+  <div class="custom-modal">
+    <h3>Monte a Caixa Mista (Pedido Manual)</h3>
+    <p>Escolha os sabores para os <strong>6 morangos</strong> desta caixa:</p>
+    <div style="background: rgba(201,151,74,0.08); border: 1px dashed var(--ouro); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.82rem; color: var(--creme);">
+      💡 <b>Regra da Caixa:</b> R$ 55,00 (tradicionais) ou R$ 65,00 (se incluir gourmet).
+    </div>
+    <div id="admin-flavor-list-container"></div>
+    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <span id="admin-flavor-count-status" style="font-size: 0.85rem; color: var(--ouro); display: block;">Restantes: 6</span>
+        <span id="admin-flavor-price-preview" style="font-size: 0.88rem; color: var(--morango); font-weight: bold; display: block;">Preço da Caixa: R$ 55,00</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn ghost" onclick="fecharAdminModalCaixa()" style="padding: 8px 14px; font-size: 0.85rem;">Cancelar</button>
+        <button class="btn" onclick="confirmarAdminCaixaMista()" style="padding: 8px 16px; font-size: 0.85rem;">Confirmar Caixa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>Seu Pedido</h3>
+    <button class="close-cart" onclick="toggleCart(false)">×</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty">Seu carrinho está vazio.</p>
+  </div>
+  <div class="cart-form-container" id="cart-form" style="display: none;">
+    <div class="cart-form-group">
+      <label for="customer-name">Seu Nome:</label>
+      <input type="text" id="customer-name" class="cart-input" placeholder="Como podemos te chamar?">
+    </div>
+    <div class="cart-form-group">
+      <label for="customer-whatsapp">Seu WhatsApp (com DDD): *</label>
+      <input type="text" id="customer-whatsapp" class="cart-input" placeholder="Ex: 42999998888">
+    </div>
+    <div class="cart-form-group">
+      <label for="customer-email">Seu E-mail (Opcional):</label>
+      <input type="email" id="customer-email" class="cart-input" placeholder="seuemail@exemplo.com">
+    </div>
+    <div class="cart-form-group">
+      <label for="payment-method">Forma de Pagamento:</label>
+      <select id="payment-method" class="cart-input">
+        <option value="Pix">Pix</option>
+        <option value="Link de cartão de crédito">Link de cartão de crédito</option>
+        <option value="Dinheiro" id="opt-dinheiro" style="display: block;">Dinheiro (Apenas para Retirada)</option>
+      </select>
+    </div>
+    <div class="cart-form-group">
+      <label>Recebimento:</label>
+      <div class="cart-radio-group">
+        <label><input type="radio" name="delivery-option" value="Retirada" onchange="toggleDeliveryForm()" checked> Retirada</label>
+        <label><input type="radio" name="delivery-option" value="Entrega" onchange="toggleDeliveryForm()"> Entrega</label>
+      </div>
+    </div>
+    <div class="cart-form-group">
+      <label for="order-date">Data para Retirada / Entrega: <span id="encomenda-aviso-tag" style="display:none; color:var(--ouro); font-size:0.75rem; font-weight:600;">(Mínimo 4 dias de antecedência)</span></label>
+      <input type="date" id="order-date" class="cart-input">
+    </div>
+    <div id="address-container">
+      <div class="cart-form-group">
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" class="cart-input" placeholder="Somente números" maxlength="9" onblur="buscarCEP()">
+      </div>
+      <div class="cart-form-group">
+        <label for="rua">Rua / Logradouro:</label>
+        <input type="text" id="rua" class="cart-input" readonly>
+      </div>
+      <div class="grid-2-cols">
+        <div class="cart-form-group">
+          <label for="numero">Número:</label>
+          <input type="text" id="numero" class="cart-input" placeholder="Ex: 123">
+        </div>
+        <div class="cart-form-group">
+          <label for="complemento">Complemento:</label>
+          <input type="text" id="complemento" class="cart-input" placeholder="Casa, Apto...">
+        </div>
+      </div>
+      <div class="cart-form-group">
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" class="cart-input" readonly>
+      </div>
+    </div>
+    <div class="cart-form-group" style="margin-top: 15px;">
+      <label for="delivery-obs">Observação de Entrega / Retirada:</label>
+      <input type="text" id="delivery-obs" class="cart-input" placeholder="Ex: Entregar após as 18h, tocar campainha...">
+    </div>
+  </div>
+  
+  <div class="cart-footer" id="cart-footer">
+    <div id="cart-coupon-section" style="display:none; margin-bottom: 15px;">
+      <label style="font-size: 0.78rem; color: var(--ouro); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; display: block;">Cupom de Desconto:</label>
+      <div class="coupon-container">
+        <input type="text" id="coupon-code" class="coupon-input" placeholder="Digite seu cupom">
+        <button class="coupon-btn" onclick="aplicarCupom()">Aplicar</button>
+      </div>
+      <div id="coupon-msg" class="coupon-msg"></div>
+    </div>
+
+    <div class="cart-totals-breakdown">
+      <div class="cart-totals-row">
+        <span>Subtotal (Doces):</span>
+        <span id="cart-subtotal-value">R$ 0,00</span>
+      </div>
+      <div class="cart-totals-row highlight" id="cart-discount-row" style="color: #2ecc71;">
+        <span>Desconto (<span id="coupon-name-display"></span>):</span>
+        <span id="cart-discount-value">- R$ 0,00</span>
+      </div>
+      <div class="cart-totals-row highlight" id="cart-delivery-row">
+        <span>Taxa de Entrega:</span>
+        <span id="cart-delivery-value">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-total">
+      <span>Total Final:</span>
+      <span id="cart-total-value">R$ 0,00</span>
+    </div>
+    <button class="btn" style="width:100%; justify-content:center;" onclick="checkoutWhatsapp()">
+      Finalizar no WhatsApp 💬
+    </button>
+  </div>
+
+  <div id="cart-success" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; height: 100%;">
+    <span style="font-size: 4rem; margin-bottom: 16px;">✅</span>
+    <h3 style="color: var(--creme); font-size: 1.5rem; margin-bottom: 12px; font-family: 'Fraunces', serif;">Tudo pronto!</h3>
+    <p style="color: var(--creme-dim); line-height: 1.5; margin-bottom: 24px;">Seu pedido foi gerado e enviado para o WhatsApp.<br>Agradecemos muito a preferência!</p>
+    <button class="btn ghost" onclick="resetCart()">Voltar para o site</button>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO DO PEDIDO -->
+<div class="custom-modal-overlay" id="modal-confirmar-pedido">
+  <div class="custom-modal" style="max-width: 520px;">
+    <h3>Confirme seu pedido</h3>
+    <p style="color: var(--creme-dim);">Data: <strong id="confirm-data-valor"></strong></p>
+    <div id="confirm-pedido-itens" style="max-height: 35vh; overflow-y: auto; margin: 14px 0;"></div>
+    <div id="confirm-pedido-desconto" class="cart-totals-row highlight" style="display: none; color: #2ecc71;">
+      <span>Desconto:</span>
+      <span id="confirm-desconto-valor">- R$ 0,00</span>
+    </div>
+    <div id="confirm-pedido-frete" class="cart-totals-row highlight" style="display: none;">
+      <span>Taxa de Entrega:</span>
+      <span id="confirm-frete-valor">R$ 0,00</span>
+    </div>
+    <div class="cart-total" style="margin-top: 12px;">
+      <span>Total Final:</span>
+      <span id="confirm-total-valor">R$ 0,00</span>
+    </div>
+    <p id="confirm-pedido-entrega" style="color: var(--creme-dim); margin: 12px 0 18px;"></p>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn ghost" onclick="fecharModalConfirmacao()" style="flex: 1; justify-content: center;">Voltar</button>
+      <button class="btn" onclick="confirmarEEnviarWhatsapp()" style="flex: 1; justify-content: center;">Confirmar e enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARA LOCALIZAR PRODUTO ANTES DE EDITAR -->
+<div class="custom-modal-overlay" id="modal-selecionar-produto-edicao">
+  <div class="custom-modal editar-produto-modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:10px;">
+      <div>
+        <h3 style="margin:0;color:var(--ouro);"><i class="fa-solid fa-pen-to-square"></i> Editar um produto</h3>
+        <p style="margin:5px 0 0;color:var(--creme-dim);font-size:.82rem;">Pesquise pelo nome, ID ou categoria e selecione o produto.</p>
+      </div>
+      <button onclick="fecharModalSelecionarProdutoEdicao()" style="background:none;border:none;color:var(--creme);font-size:1.5rem;cursor:pointer;">×</button>
+    </div>
+
+    <div class="editar-produto-search-wrap">
+      <input type="search" id="editar-produto-pesquisa" class="estoque-control" placeholder="Digite o nome, ID ou categoria..." autocomplete="off" oninput="filtrarProdutosParaEdicao(this.value)">
+      <i class="fa-solid fa-magnifying-glass estoque-search-icon"></i>
+    </div>
+
+    <div id="editar-produto-resultados" class="editar-produto-results"></div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+      <button class="btn ghost" type="button" onclick="fecharModalSelecionarProdutoEdicao()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CRIAÇÃO / EDIÇÃO DE PRODUTO -->
+<div class="custom-modal-overlay" id="modal-produto-form">
+  <div class="custom-modal" style="max-width: 550px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);" id="modal-produto-titulo">Adicionar Novo Produto</h3>
+      <button onclick="fecharModalProdutoForm()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+    <input type="hidden" id="form-prod-modo" value="novo">
+    <input type="hidden" id="form-prod-id-original" value="">
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">ID (ex: morango_coco):</label>
+        <input type="text" id="form-prod-id" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="id_unico">
+      </div>
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">Nome do Produto:</label>
+        <input type="text" id="form-prod-nome" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Nome Exemplo">
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">Preço (R$):</label>
+        <input type="number" step="0.01" id="form-prod-preco" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="12.00">
+      </div>
+      <div>
+        <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Categoria:</label>
+        <input type="text" id="form-prod-categoria" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Cravejados, Tradicionais...">
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--creme-dim);">Limite Diário:</label>
+        <input type="number" id="form-prod-limite" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" value="20">
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; padding-top: 20px;">
+        <input type="checkbox" id="form-prod-novidade" style="width: 18px; height: 18px; accent-color: var(--morango);">
+        <label for="form-prod-novidade" style="color: var(--ouro); font-weight: bold; font-size: 0.85rem; cursor: pointer;">Marcar como NOVIDADE</label>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <label style="font-size: 0.75rem; color: var(--creme-dim);">Descrição:</label>
+      <input type="text" id="form-prod-descricao" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Breve descrição...">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="font-size: 0.75rem; color: var(--creme-dim);">Foto do Produto:</label>
+      <input type="file" id="form-prod-foto" accept="image/*" class="cart-input" style="padding: 6px; font-size: 0.8rem; margin-top: 4px;">
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button class="btn ghost" onclick="fecharModalProdutoForm()" style="flex: 1; justify-content: center;">Cancelar</button>
+      <button class="btn" onclick="salvarProdutoModalForm()" style="flex: 2; justify-content: center; background: var(--ouro); color: var(--carvao);">Salvar Produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAINEL ADMINISTRATIVO COM MENU RESPONSIVO -->
+<div class="admin-modal-overlay" id="admin-modal-overlay">
+  <div class="admin-dashboard-layout">
+    
+    <div class="admin-sidebar" id="admin-sidebar-mobile">
+      <div class="admin-sidebar-top">
+        <div class="admin-logo-area">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-store" style="color: var(--ouro);"></i>
+            <span>Painel Admin</span>
+          </div>
+          <button class="btn-close-sidebar" onclick="toggleAdminSidebarMobile()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="admin-nav-links">
+          <button class="admin-nav-btn active" onclick="mudarAbaAdmin('overview')"><i class="fa-solid fa-chart-pie"></i> Visão Geral (Overview)</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('estoque')"><i class="fa-solid fa-boxes-stacked"></i> Estoque & Cardápio</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('docinhos')"><i class="fa-solid fa-candy-cane"></i> Docinhos 🍬</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('presentes')"><i class="fa-solid fa-gift"></i> Presentes 🎁</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('pedidos')"><i class="fa-solid fa-clipboard-list"></i> Lista de Pedidos</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('coletivos')"><i class="fa-solid fa-users-rectangle"></i> Pedidos Coletivos 👥</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('manual')"><i class="fa-solid fa-cart-plus"></i> Novo Pedido Manual</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('cupons')"><i class="fa-solid fa-ticket"></i> Cupons de Desconto</button>
+          <button class="admin-nav-btn" onclick="mudarAbaAdmin('avaliadores')"><i class="fa-solid fa-star"></i> Avaliadores Google</button>
+          <button class="admin-nav-btn admin-nav-gestao" onclick="window.location.href='gestao.html'"><i class="fa-solid fa-calculator"></i> Gestão & Precificação</button>
+        </div>
+      </div>
+      <div>
+        <button class="admin-nav-btn" onclick="fecharAdmin()" style="color: #e74c3c;"><i class="fa-solid fa-right-from-bracket" style="color: #e74c3c;"></i> Sair do Painel</button>
+      </div>
+    </div>
+
+    <div class="admin-main-content">
+      <div class="admin-topbar">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+          <button class="btn-menu-mobile" onclick="toggleAdminSidebarMobile()"><i class="fa-solid fa-bars"></i></button>
+          <div style="min-width: 0;">
+            <h3 style="font-family: 'Fraunces', serif; color: var(--creme); margin: 0; font-size: 1.1rem;" id="admin-title-header">Visão Geral de Vendas</h3>
+            <p style="margin: 2px 0 0 0; font-size: 0.72rem; color: var(--ouro); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Festival do Morango · Dois Amores</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
+          <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line);">
+            <div style="width: 7px; height: 7px; border-radius: 50%; background: #2ecc71;" id="admin-status-dot"></div>
+            <span style="font-size: 0.72rem; color: var(--creme-dim);" id="admin-status-label">Ativo</span>
+            <button class="btn-sm" onclick="alternarStatusLojaManual()" style="margin-left: 2px; padding: 2px 5px; font-size: 0.65rem;">Alternar</button>
+          </div>
+          <button onclick="fecharAdmin()" style="background:rgba(255,255,255,0.05); border:1px solid var(--line); border-radius:50%; width:30px; height:30px; color:var(--creme); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink: 0;">×</button>
+        </div>
+      </div>
+      
+      <div class="admin-body-scroll">
+        
+        <div class="admin-card-box" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: #e74c3c;" id="admin-encomenda-dot"></div>
+            <div>
+              <h4 style="margin:0; color: var(--creme); font-size: 0.88rem;">Modo Apenas por Encomenda</h4>
+              <p style="margin:1px 0 0 0; font-size: 0.78rem; color: var(--creme-dim);" id="admin-encomenda-label">Desativado</p>
+            </div>
+          </div>
+          <button class="btn-sm" id="btn-toggle-encomenda" onclick="alternarModoEncomenda()" style="padding: 6px 14px; font-size: 0.78rem; background: var(--ouro);">Ativar / Desativar</button>
+        </div>
+
+        <!-- ABA: OVERVIEW -->
+        <div id="aba-overview" class="admin-tab-content active">
+          <div class="stats-grid">
+            <div class="stat-card purple">
+              <div class="stat-card-title">Faturamento do Mês</div>
+              <div class="stat-card-value" id="stat-vendas-mes">R$ 0,00</div>
+              <div class="stat-card-footer"><i class="fa-solid fa-calendar-days"></i> Acumulado deste mês</div>
+            </div>
+            
+            <div class="stat-card gold">
+              <div class="stat-card-title">Vendas do Dia</div>
+              <div class="stat-card-value" id="stat-vendas-dia">R$ 0,00</div>
+              <div class="stat-card-footer"><i class="fa-solid fa-bolt"></i> Faturamento hoje</div>
+            </div>
+
+            <div class="stat-card green">
+              <div class="stat-card-title">Ticket Médio</div>
+              <div class="stat-card-value" id="stat-ticket-medio">R$ 0,00</div>
+              <div class="stat-card-footer"><i class="fa-solid fa-chart-line"></i> Valor médio por pedido</div>
+            </div>
+
+            <div class="stat-card blue">
+              <div class="stat-card-title">Pedidos Pendentes</div>
+              <div class="stat-card-value" id="stat-pedidos-pendentes">0</div>
+              <div class="stat-card-footer"><i class="fa-solid fa-clock"></i> Aguardando ou Preparo</div>
+            </div>
+
+            <div class="stat-card gold" style="border-color: rgba(201, 151, 74, 0.6); cursor: pointer;" onclick="mudarAbaAdmin('coletivos')" title="Clique para abrir Pedidos Coletivos">
+              <div class="stat-card-title">Pedidos Coletivos</div>
+              <div class="stat-card-value" id="stat-coletivos-total">0</div>
+              <div class="stat-card-footer"><i class="fa-solid fa-users"></i> Grupos & Escritórios</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+            <div class="admin-card-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <h4 style="margin:0; color: var(--ouro); font-size: 1.05rem;"><i class="fa-solid fa-fire"></i> Últimos Pedidos Recebidos</h4>
+                <div style="display: flex; gap: 6px;">
+                  <button class="btn-sm" id="btn-filtro-ov-todos" onclick="filtrarOverviewTipo('todos')" style="font-size: 0.72rem; padding: 4px 10px; background: var(--ouro); color: var(--carvao); font-weight: bold;">Todos</button>
+                  <button class="btn-sm" id="btn-filtro-ov-indiv" onclick="filtrarOverviewTipo('individuais')" style="font-size: 0.72rem; padding: 4px 10px; background: rgba(255,255,255,0.08); color: var(--creme);">Individuais</button>
+                  <button class="btn-sm" id="btn-filtro-ov-colet" onclick="filtrarOverviewTipo('coletivos')" style="font-size: 0.72rem; padding: 4px 10px; background: rgba(255,255,255,0.08); color: var(--creme);">Coletivos 👥</button>
+                </div>
+              </div>
+              <div id="overview-ultimos-pedidos">
+                <p style="color: var(--creme-dim); font-style: italic; font-size: 0.9rem;">Carregando pedidos recentes...</p>
+              </div>
+            </div>
+
+            <div class="admin-card-box">
+              <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1.05rem;"><i class="fa-solid fa-trophy"></i> Destaques Mais Vendidos</h4>
+              <p style="color: var(--creme-dim); font-size: 0.88rem; margin-bottom: 12px;">Itens com maior saída registrada (desde sempre):</p>
+              <div id="overview-destaques-produtos">
+                <p style="color: var(--creme-dim); font-style: italic; font-size: 0.9rem;">Carregando produtos...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA: ESTOQUE & CARDÁPIO -->
+        <div id="aba-estoque" class="admin-tab-content">
+          <!-- AÇÕES PRINCIPAIS DE PRODUTOS -->
+          <div style="margin-bottom: 24px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <button class="btn" onclick="abrirModalSelecionarProdutoEdicao()" style="background: var(--ouro); color: var(--carvao); font-weight: 700; box-shadow: 0 6px 20px rgba(201,151,74,0.3);">
+              <i class="fa-solid fa-pen-to-square"></i> Editar um produto
+            </button>
+            <button class="btn" onclick="abrirModalNovoProduto()" style="background: var(--ouro); color: var(--carvao); font-weight: 700; box-shadow: 0 6px 20px rgba(201,151,74,0.3);">
+              <i class="fa-solid fa-plus-circle"></i> Adicionar Novo Produto
+            </button>
+          </div>
+
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--creme-dim);">Gerenciar Produtos Cadastrados & Estoque Diário:</h4>
+
+          <div class="estoque-ferramentas">
+            <div class="estoque-search-box">
+              <label for="estoque-pesquisa-geral">Pesquisar no estoque</label>
+              <input type="search" id="estoque-pesquisa-geral" class="estoque-control" placeholder="Buscar por nome, ID ou categoria..." autocomplete="off" oninput="filtrarTabelaEstoque(this.value)">
+              <i class="fa-solid fa-magnifying-glass estoque-search-icon"></i>
+              <div class="estoque-result-count" id="estoque-result-count">Carregando produtos...</div>
+            </div>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Foto</th>
+                  <th>Nome / ID</th>
+                  <th>Preço</th>
+                  <th>Limite Atual</th>
+                  <th>Repor / Somar (+ Qtd)</th>
+                  <th>Disponível</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ABA: DOCINHOS -->
+        <div id="aba-docinhos" class="admin-tab-content">
+          <div class="admin-card-box">
+            <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1rem;">➕ Cadastrar Novo Docinho (12g)</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">ID:</label>
+                <input type="text" id="doc-id" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="id_unico">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Nome:</label>
+                <input type="text" id="doc-nome" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Ex: Brigadeiro">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Preço Unitário (R$):</label>
+                <input type="number" step="0.01" id="doc-preco" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="1.30">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Categoria:</label>
+                <select id="doc-categoria" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;">
+                  <option value="Docinho - Tradicional">Tradicionais</option>
+                  <option value="Docinho - Especial">Especiais</option>
+                  <option value="Docinho - Gourmet">Gourmets</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Descrição:</label>
+                <input type="text" id="doc-descricao" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Descrição">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Foto:</label>
+                <input type="file" id="doc-foto" accept="image/*" class="cart-input" style="padding: 6px; font-size: 0.8rem; margin-top: 4px;">
+              </div>
+            </div>
+            <button class="btn-sm" style="width: 100%; padding: 11px; background: var(--ouro); font-weight: bold;" onclick="inserirNovoDocinho()">Cadastrar Docinho</button>
+          </div>
+
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--creme-dim);">Gerenciar Docinhos:</h4>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Foto</th>
+                  <th>Alterar</th>
+                  <th>Nome</th>
+                  <th>Cat.</th>
+                  <th>Descrição</th>
+                  <th>Preço</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-docinhos-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ABA: PRESENTES -->
+        <div id="aba-presentes" class="admin-tab-content">
+          <div class="admin-card-box">
+            <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1rem;">➕ Cadastrar Novo Presente</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">ID:</label>
+                <input type="text" id="pres-id" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="id_unico">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Nome:</label>
+                <input type="text" id="pres-nome" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Nome">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Preço (R$):</label>
+                <input type="number" step="0.01" id="pres-preco" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="89.90">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Categoria:</label>
+                <select id="pres-categoria" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;">
+                  <option value="pais">Dia dos Pais</option>
+                  <option value="amor">Para Seu Amor</option>
+                  <option value="Para Presentear">Para Presentear</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Descrição:</label>
+                <input type="text" id="pres-descricao" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="Descrição">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Foto:</label>
+                <input type="file" id="pres-foto" accept="image/*" class="cart-input" style="padding: 6px; font-size: 0.8rem; margin-top: 4px;">
+              </div>
+            </div>
+            <button class="btn-sm" style="width: 100%; padding: 11px; background: var(--ouro); font-weight: bold;" onclick="inserirNovoPresenteAdmin()">Cadastrar Presente</button>
+          </div>
+
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--creme-dim);">Gerenciar Presentes:</h4>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Foto</th>
+                  <th>Alterar</th>
+                  <th>Nome</th>
+                  <th>Cat.</th>
+                  <th>Descrição</th>
+                  <th>Preço</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-presentes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ABA: PEDIDOS -->
+        <div id="aba-pedidos" class="admin-tab-content">
+          <div class="pedido-filter-btns">
+            <button class="filter-btn active" id="btn-filtro-hoje" onclick="mudarFiltroPedidos('hoje')">📅 Hoje</button>
+            <button class="filter-btn" id="btn-filtro-anteriores" onclick="mudarFiltroPedidos('anteriores')">📂 Anteriores</button>
+            <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+              <input type="date" id="filtro-data-especifica" class="cart-input" style="padding: 6px 10px; font-size: 0.85rem; width: auto;" onchange="filtrarPedidosPorDataEspecifica()">
+              <button class="btn-sm" onclick="limparFiltroData()" style="padding: 7px 12px; background: rgba(255,255,255,0.1); color: var(--creme);">Limpar</button>
+            </div>
+          </div>
+          <div id="lista-pedidos-admin" style="margin-top: 15px;"></div>
+          
+          <div style="margin-top: 20px; text-align: right;">
+            <button class="btn-sm" style="background: var(--ouro); color: var(--carvao); padding: 10px 18px; font-size: 0.85rem; font-weight: bold;" onclick="gerarRelatorioSaidaSabores()">
+              📊 Relatório de Saída por Sabores
+            </button>
+          </div>
+        </div>
+
+        <!-- ABA: PEDIDOS COLETIVOS -->
+        <div id="aba-coletivos" class="admin-tab-content">
+          <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1.1rem;">Listas de Pedidos Coletivos Recebidas</h4>
+          <div id="lista-coletivos-admin"><p style="color: var(--creme-dim); font-style: italic;">Carregando pedidos coletivos...</p></div>
+        </div>
+
+        <!-- ABA: PEDIDO MANUAL -->
+        <div id="aba-manual" class="admin-tab-content">
+          <div class="admin-card-box highlight">
+            <h4 style="margin:0 0 6px 0; color: var(--ouro); font-size: 1.05rem;">📝 Lançamento Manual de Pedido</h4>
+            <p style="margin:0 0 16px 0; font-size: 0.85rem; color: var(--creme-dim);">Monte o pedido para um cliente por telefone/balcão.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Nome do Cliente:</label>
+                <input type="text" id="manual-cliente" class="cart-input" style="margin-top: 4px;" placeholder="Ex: Maria Silva">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">WhatsApp (Opcional):</label>
+                <input type="text" id="manual-whatsapp" class="cart-input" style="margin-top: 4px;" placeholder="Ex: 42999998888">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Forma de Pagamento:</label>
+                <select id="manual-pagamento" class="cart-input" style="margin-top: 4px;">
+                  <option value="Pix">Pix</option>
+                  <option value="Dinheiro">Dinheiro</option>
+                  <option value="Cartão">Cartão</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Tipo:</label>
+                <select id="manual-recebimento" class="cart-input" style="margin-top: 4px;" onchange="toggleManualEntrega()">
+                  <option value="Retirada">Retirada no Local</option>
+                  <option value="Entrega">Entrega</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Data Agendada:</label>
+                <input type="date" id="manual-data" class="cart-input" style="margin-top: 4px;">
+              </div>
+            </div>
+
+            <div id="manual-endereco-box" style="display: none; margin-bottom: 16px;">
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+                <div>
+                  <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Endereço de Entrega:</label>
+                  <input type="text" id="manual-endereco" class="cart-input" style="margin-top: 4px;" placeholder="Rua, Número, Bairro...">
+                </div>
+                <div>
+                  <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">Taxa (R$):</label>
+                  <input type="number" step="0.01" id="manual-taxa-entrega" class="cart-input" style="margin-top: 4px;" value="0.00" oninput="calcularTotalManual()">
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold; display: block; margin-bottom: 8px;">Produtos:</label>
+              <div class="admin-table-wrapper">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50%;">Produto</th>
+                      <th style="width: 25%;">Preço Un.</th>
+                      <th style="width: 25%; text-align: center;">Qtd</th>
+                    </tr>
+                  </thead>
+                  <tbody id="manual-produtos-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 14px 20px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 16px;">
+              <span style="font-size: 1.05rem; font-weight: bold; color: var(--creme);">Total Calculado:</span>
+              <span id="manual-total-preview" style="font-size: 1.25rem; font-weight: bold; color: var(--morango);">R$ 0,00</span>
+            </div>
+
+            <button class="btn" style="width: 100%; justify-content: center; background: var(--ouro); color: var(--carvao);" onclick="salvarPedidoManual()">
+              💾 Gerar e Salvar Pedido Manual
+            </button>
+          </div>
+        </div>
+
+        <!-- ABA: CUPONS -->
+        <div id="aba-cupons" class="admin-tab-content">
+          <div class="admin-card-box highlight">
+            <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1rem;">➕ Criar Novo Cupom de Desconto</h4>
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 12px; align-items: flex-end;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Código:</label>
+                <input type="text" id="novo-cupom-codigo" class="cart-input" style="padding: 8px; font-size: 0.88rem; text-transform: uppercase; margin-top: 4px;" placeholder="EX: PROMO10">
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Tipo:</label>
+                <select id="novo-cupom-tipo" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;">
+                  <option value="percentual">Porcentagem (%)</option>
+                  <option value="fixo">Valor Fixo (R$)</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--creme-dim);">Valor:</label>
+                <input type="number" step="0.01" id="novo-cupom-valor" class="cart-input" style="padding: 8px; font-size: 0.88rem; margin-top: 4px;" placeholder="10">
+              </div>
+              <div>
+                <button class="btn-sm" style="width: 100%; padding: 11px; background: var(--ouro); font-weight: bold;" onclick="adicionarCupomAdmin()">Cadastrar</button>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: var(--creme-dim);">Cupons Ativos:</h4>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Tipo</th>
+                  <th>Desconto</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-cupons-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ABA: AVALIADORES GOOGLE -->
+        <div id="aba-avaliadores" class="admin-tab-content">
+          <div class="admin-card-box highlight">
+            <h4 style="margin:0 0 8px 0; color: var(--ouro); font-size: 1rem;">⭐ Gerenciar Lista de Avaliadores do Google</h4>
+            <p style="font-size: 0.85rem; color: var(--creme-dim); margin-bottom: 14px;">
+              Insira os nomes das pessoas que avaliaram a doceria no Google (um por linha). Ganham <strong>3 docinhos cortesia</strong>!
+            </p>
+            <div class="cart-form-group" style="margin-bottom: 14px;">
+              <textarea id="input-lista-avaliadores" class="cart-input" rows="8" placeholder="Ex:&#10;Taisa Desplanches&#10;Patricia Santos"></textarea>
+            </div>
+            <button class="btn-sm" style="padding: 12px 24px; background: var(--ouro); font-weight: bold; font-size: 0.9rem;" onclick="salvarListaAvaliadores()">
+              💾 Salvar Lista de Avaliadores
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px;">
+          <div style="display: flex; align-items: end; gap: 10px; flex-wrap: wrap;">
+            <div>
+              <label for="relatorio-data-inicio" style="display: block; margin-bottom: 4px; font-size: 0.75rem; color: var(--creme-dim);">Data agendada de:</label>
+              <input type="date" id="relatorio-data-inicio" class="cart-input" style="padding: 8px 10px; font-size: 0.85rem;">
+            </div>
+            <div>
+              <label for="relatorio-data-fim" style="display: block; margin-bottom: 4px; font-size: 0.75rem; color: var(--creme-dim);">Até:</label>
+              <input type="date" id="relatorio-data-fim" class="cart-input" style="padding: 8px 10px; font-size: 0.85rem;">
+            </div>
+          </div>
+          <button class="btn ghost" onclick="gerarRelatorioPDF()" style="font-size: 0.85rem; padding: 10px 20px; border-color: var(--ouro); color: var(--ouro);">
+            📄 Relatório PDF Geral
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn" onclick="salvarTodosLimites()" style="background: var(--ouro); color: var(--carvao); font-size: 0.85rem; padding: 10px 20px;">
+              💾 Salvar Reposições de Estoque
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="relatorio-print-area"></div>
+
+<!-- SCRIPTS -->
+<script src="js/00-supabase.js"></script>
+<script src="js/00-utils.js"></script>
+<script src="js/01-core.js"></script>
+<script src="js/02-catalogo.js"></script>
+<script src="js/03-coletivos.js?v=20261002-3"></script>
+<script src="js/04-admin-manual.js"></script>
+<script src="js/05-pedidos.js?v=20261003-1"></script>
+<script src="js/06-cupons.js"></script>
+<script src="js/07-produtos-estoque.js"></script>
+<script src="js/08-carrinho-checkout.js"></script>
+
+</body>
+</html>
