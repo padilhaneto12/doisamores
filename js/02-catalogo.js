@@ -168,17 +168,18 @@
               const ehColetivo = String(p.id || '').startsWith('collab_');
               const dataExibicao = p.dataAgendada || p.data || '';
               const horaExibicao = p.hora ? ` às ${p.hora}` : '';
+              const statusPedido = String(p.status || 'aguardando');
+              const statusClasse = statusPedido === 'pronto' ? 'pronto' : 'aguardando';
               return `
-                <div onclick="irParaPedidoNoAdmin('${p.id}')" style="background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 10px; border: 1px solid ${ehColetivo ? 'rgba(201,151,74,0.45)' : 'var(--line)'}; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s;" title="Clique para abrir este pedido">
-                  <div>
-                    <b style="color: var(--creme); font-size: 0.9rem;">${p.cliente}</b>
-                    <div style="font-size: 0.78rem; color: var(--creme-dim);">
-                      ${ehColetivo ? '👥 Pedido Coletivo · ' : ''}${dataExibicao}${horaExibicao}
-                    </div>
+                <div class="ov-row${ehColetivo ? ' coletivo' : ''}" onclick="irParaPedidoNoAdmin('${p.id}')" title="Clique para abrir este pedido">
+                  <div class="ov-avatar"><i class="fa-solid ${ehColetivo ? 'fa-user-group' : 'fa-user'}"></i></div>
+                  <div class="ov-info">
+                    <b>${p.cliente}</b>
+                    <small>${ehColetivo ? 'Pedido Coletivo · ' : ''}${dataExibicao}${horaExibicao}</small>
                   </div>
-                  <div style="text-align: right;">
-                    <span style="color: var(--ouro); font-weight: bold; font-size: 0.9rem;">${Number(p.total || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                    <div style="font-size: 0.72rem; text-transform: uppercase; color: ${p.status === 'pronto' ? '#2ecc71' : '#f39c12'}; font-weight: bold;">${p.status || 'aguardando'}</div>
+                  <div class="ov-side">
+                    <span class="ov-total">${Number(p.total || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                    <span class="ov-status ${statusClasse}"><i></i>${statusPedido}</span>
                   </div>
                 </div>
               `;
@@ -211,12 +212,10 @@
         destaquesContainer.innerHTML = `<p style="color: var(--creme-dim); font-style: italic; font-size: 0.9rem;">Nenhuma venda registrada ainda.</p>`;
       } else {
         destaquesContainer.innerHTML = topProdutos.map(prod => `
-          <div style="background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="${prod.image}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-              <span style="color: var(--creme); font-size: 0.88rem; font-weight: 600;">${prod.name}</span>
-            </div>
-            <span style="color: var(--ouro); font-size: 0.82rem; font-weight: bold;">Vendidos: ${prod.vendidos}</span>
+          <div class="ov-row destaque">
+            <img class="ov-avatar" src="${prod.image}" alt="">
+            <div class="ov-info"><b>${prod.name}</b></div>
+            <span class="ov-vendidos">Vendidos: <strong>${prod.vendidos}</strong></span>
           </div>
         `).join('');
       }
@@ -235,9 +234,8 @@
     Object.entries(botoes).forEach(([chave, btn]) => {
       if (!btn) return;
       const ativo = chave === tipo;
-      btn.style.background = ativo ? 'var(--ouro)' : 'rgba(255,255,255,0.08)';
-      btn.style.color = ativo ? 'var(--carvao)' : 'var(--creme)';
-      btn.style.fontWeight = ativo ? 'bold' : 'normal';
+      btn.classList.toggle('ativo', ativo);
+      btn.removeAttribute('style');
     });
 
     atualizarMetricasOverview();

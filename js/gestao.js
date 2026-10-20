@@ -152,7 +152,7 @@
   function insumoRowHtml(i) {
     const hasAp = Array.isArray(i.aproveitamentos) && i.aproveitamentos.length > 0;
     const extra = [i.categoria, i.fornecedor].filter(Boolean).map(esc).join(' · ');
-    return `<div class="ins-row"><div><b>${esc(i.nome)}${hasAp ? '<span class="tag ap">aproveitamentos</span>' : ''}</b><small>${num(i.quantidade_embalagem)} ${unitLabel(i.unidade_compra)} · ${money(i.preco_compra)}${pricePill(i)}</small>${extra ? `<small>${extra}</small>` : ''}</div><div class="ins-cost">${ctext(asApp(i))}</div><div class="ins-acts"><button type="button" onclick="window.gestao.editIngredient('${i.id}')">Editar</button><button type="button" class="danger" onclick="window.gestao.deleteIngredient('${i.id}')">Excluir</button></div></div>`;
+    return `<div class="ins-row"><div><b>${esc(i.nome)}${hasAp ? '<span class="tag ap">aproveitamentos</span>' : ''}</b><small>${num(i.quantidade_embalagem)} ${unitLabel(i.unidade_compra)} · ${money(i.preco_compra)}${pricePill(i)}</small>${extra ? `<small>${extra}</small>` : ''}</div><div class="ins-cost">${ctext(asApp(i))}</div><div class="ins-acts"><button type="button" onclick="window.gestao.editIngredient('${i.id}')" title="Editar" aria-label="Editar"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button type="button" class="danger" onclick="window.gestao.deleteIngredient('${i.id}')" title="Excluir" aria-label="Excluir"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div>`;
   }
   function filteredInsumos() {
     const q = state.busca.trim().toLowerCase();

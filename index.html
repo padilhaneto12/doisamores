@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css?v=20261010-8">
+<link rel="stylesheet" href="css/painel-vinho.css?v=20261020-1">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -787,43 +788,43 @@
           <div class="stats-grid">
             <div class="stat-card purple">
               <div class="stat-card-title">Faturamento do Mês</div>
-              <div class="stat-card-value" id="stat-vendas-mes">R$ 0,00</div>
+              <div class="stat-card-main"><span class="stat-card-icon"><i class="fa-solid fa-calendar-days"></i></span><div class="stat-card-value" id="stat-vendas-mes">R$ 0,00</div></div>
               <div class="stat-card-footer"><i class="fa-solid fa-calendar-days"></i> Acumulado deste mês</div>
             </div>
             
             <div class="stat-card gold">
               <div class="stat-card-title">Vendas do Dia</div>
-              <div class="stat-card-value" id="stat-vendas-dia">R$ 0,00</div>
+              <div class="stat-card-main"><span class="stat-card-icon"><i class="fa-solid fa-bolt"></i></span><div class="stat-card-value" id="stat-vendas-dia">R$ 0,00</div></div>
               <div class="stat-card-footer"><i class="fa-solid fa-bolt"></i> Faturamento hoje</div>
             </div>
 
             <div class="stat-card green">
               <div class="stat-card-title">Ticket Médio</div>
-              <div class="stat-card-value" id="stat-ticket-medio">R$ 0,00</div>
+              <div class="stat-card-main"><span class="stat-card-icon"><i class="fa-solid fa-chart-line"></i></span><div class="stat-card-value" id="stat-ticket-medio">R$ 0,00</div></div>
               <div class="stat-card-footer"><i class="fa-solid fa-chart-line"></i> Valor médio por pedido</div>
             </div>
 
             <div class="stat-card blue">
               <div class="stat-card-title">Pedidos Pendentes</div>
-              <div class="stat-card-value" id="stat-pedidos-pendentes">0</div>
+              <div class="stat-card-main"><span class="stat-card-icon"><i class="fa-solid fa-clock"></i></span><div class="stat-card-value" id="stat-pedidos-pendentes">0</div></div>
               <div class="stat-card-footer"><i class="fa-solid fa-clock"></i> Aguardando ou Preparo</div>
             </div>
 
-            <div class="stat-card gold" style="border-color: rgba(201, 151, 74, 0.6); cursor: pointer;" onclick="mudarAbaAdmin('coletivos')" title="Clique para abrir Pedidos Coletivos">
+            <div class="stat-card gold" style="cursor: pointer;" onclick="mudarAbaAdmin('coletivos')" title="Clique para abrir Pedidos Coletivos">
               <div class="stat-card-title">Pedidos Coletivos</div>
-              <div class="stat-card-value" id="stat-coletivos-total">0</div>
+              <div class="stat-card-main"><span class="stat-card-icon"><i class="fa-solid fa-users"></i></span><div class="stat-card-value" id="stat-coletivos-total">0</div></div>
               <div class="stat-card-footer"><i class="fa-solid fa-users"></i> Grupos & Escritórios</div>
             </div>
           </div>
 
           <div class="admin-overview-panels">
             <div class="admin-card-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-                <h4 style="margin:0; color: var(--ouro); font-size: 1.05rem;"><i class="fa-solid fa-fire"></i> Últimos Pedidos Recebidos</h4>
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn-sm" id="btn-filtro-ov-todos" onclick="filtrarOverviewTipo('todos')" style="font-size: 0.72rem; padding: 4px 10px; background: var(--ouro); color: var(--carvao); font-weight: bold;">Todos</button>
-                  <button class="btn-sm" id="btn-filtro-ov-indiv" onclick="filtrarOverviewTipo('individuais')" style="font-size: 0.72rem; padding: 4px 10px; background: rgba(255,255,255,0.08); color: var(--creme);">Individuais</button>
-                  <button class="btn-sm" id="btn-filtro-ov-colet" onclick="filtrarOverviewTipo('coletivos')" style="font-size: 0.72rem; padding: 4px 10px; background: rgba(255,255,255,0.08); color: var(--creme);">Coletivos 👥</button>
+              <div class="ov-head">
+                <h4 class="ov-title"><i class="fa-solid fa-fire"></i> Últimos Pedidos Recebidos</h4>
+                <div class="ov-filtros">
+                  <button class="btn-sm btn-filtro-ov ativo" id="btn-filtro-ov-todos" onclick="filtrarOverviewTipo('todos')">Todos</button>
+                  <button class="btn-sm btn-filtro-ov" id="btn-filtro-ov-indiv" onclick="filtrarOverviewTipo('individuais')">Individuais</button>
+                  <button class="btn-sm btn-filtro-ov" id="btn-filtro-ov-colet" onclick="filtrarOverviewTipo('coletivos')">Coletivos 👥</button>
                 </div>
               </div>
               <div id="overview-ultimos-pedidos">
@@ -832,8 +833,8 @@
             </div>
 
             <div class="admin-card-box">
-              <h4 style="margin:0 0 14px 0; color: var(--ouro); font-size: 1.05rem;"><i class="fa-solid fa-trophy"></i> Destaques Mais Vendidos</h4>
-              <p style="color: var(--creme-dim); font-size: 0.88rem; margin-bottom: 12px;">Itens com maior saída registrada (desde sempre):</p>
+              <h4 class="ov-title"><i class="fa-solid fa-trophy"></i> Destaques Mais Vendidos</h4>
+              <p class="ov-sub">Itens com maior saída registrada (desde sempre):</p>
               <div id="overview-destaques-produtos">
                 <p style="color: var(--creme-dim); font-style: italic; font-size: 0.9rem;">Carregando produtos...</p>
               </div>
@@ -1203,7 +1204,7 @@
 <script src="js/00-supabase.js"></script>
 <script src="js/00-utils.js"></script>
 <script src="js/01-core.js"></script>
-<script src="js/02-catalogo.js"></script>
+<script src="js/02-catalogo.js?v=20261020-1"></script>
 <script src="js/03-coletivos.js?v=20261010-2"></script>
 <script src="js/04-admin-manual.js?v=20261010-5"></script>
 <script src="js/05-pedidos.js?v=20261003-1"></script>
