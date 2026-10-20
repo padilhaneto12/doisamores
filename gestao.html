@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão & Precificação — Dois Amores Doceria</title>
-  <meta name="description" content="Gestão de insumos, compras e precificação da Dois Amores Doceria.">
+  <title>Insumos & Compras — Dois Amores Doceria</title>
+  <meta name="description" content="Cadastro de insumos e registro de compras da Dois Amores Doceria.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/gestao.css">
+  <link rel="stylesheet" href="css/gestao.css?v=20261010-3">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div id="access-screen" class="access-screen">
     <div class="access-card glass">
-      <div class="brand-mark"><i class="fa-solid fa-calculator"></i></div>
+      <div class="brand-mark"><i class="fa-solid fa-basket-shopping"></i></div>
       <span class="eyebrow">Dois Amores · Gestão</span>
-      <h1>Gestão &<br><em>Precificação</em></h1>
-      <p>Entre com sua conta administrativa para acessar insumos, compras e receitas.</p>
+      <h1>Insumos &<br><em>Compras</em></h1>
+      <p>Entre com sua conta administrativa para acessar o cadastro de insumos e o registro de compras.</p>
       <form id="access-form">
         <div class="field" style="text-align: left; margin-bottom: 12px;">
           <label for="access-email">E-mail</label>
@@ -36,7 +36,7 @@
         <p id="access-error" role="alert" aria-live="polite" style="display: none; margin: 0 0 14px; color: var(--red);"></p>
         <button class="glass-btn primary" id="btn-access" type="submit"><i class="fa-solid fa-lock"></i> Entrar</button>
       </form>
-      <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao painel</a>
+      <a href="index.html?abrirAdmin=1" class="back-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao painel admin</a>
     </div>
   </div>
 
@@ -47,25 +47,20 @@
         <div><strong>Dois Amores</strong><small>Gestão</small></div>
       </div>
       <nav>
-        <button class="side-link active" data-view="dashboard"><i class="fa-solid fa-chart-line"></i><span>Visão geral</span></button>
-        <button class="side-link" data-view="insumos"><i class="fa-solid fa-box-open"></i><span>Insumos</span></button>
+        <button class="side-link active" data-view="insumos"><i class="fa-solid fa-box-open"></i><span>Insumos</span></button>
         <button class="side-link" data-view="compras"><i class="fa-solid fa-basket-shopping"></i><span>Compras</span></button>
-        <button class="side-link" data-view="equipamentos"><i class="fa-solid fa-bolt"></i><span>Equipamentos</span></button>
-        <button class="side-link" data-view="receitas"><i class="fa-solid fa-book-open"></i><span>Receitas</span></button>
-        <button class="side-link" data-view="precificacao"><i class="fa-solid fa-calculator"></i><span>Precificação</span></button>
       </nav>
       <div class="sidebar-bottom">
-        <button class="side-link" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i><span>Sair da gestão</span></button>
-        <button class="side-link" id="btn-voltar"><i class="fa-solid fa-arrow-left"></i><span>Voltar ao painel</span></button>
+        <button class="side-link" id="btn-voltar"><i class="fa-solid fa-arrow-left"></i><span>Voltar ao painel admin</span></button>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <button class="mobile-menu" id="mobile-menu"><i class="fa-solid fa-bars"></i></button>
+        <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button>
         <div>
-          <span class="eyebrow" id="view-eyebrow">GESTÃO</span>
-          <h2 id="view-title">Visão geral</h2>
+          <span class="eyebrow" id="view-eyebrow">CADASTRO</span>
+          <h2 id="view-title">Insumos</h2>
         </div>
         <div class="topbar-actions">
           <span class="status-pill"><span></span> Sistema ativo</span>
@@ -74,12 +69,8 @@
       </header>
 
       <div id="toast" class="toast"></div>
-      <section id="view-dashboard" class="view active"></section>
-      <section id="view-insumos" class="view"></section>
+      <section id="view-insumos" class="view active"></section>
       <section id="view-compras" class="view"></section>
-      <section id="view-equipamentos" class="view"></section>
-      <section id="view-receitas" class="view"></section>
-      <section id="view-precificacao" class="view"></section>
     </main>
   </div>
 
@@ -87,13 +78,13 @@
     <div class="modal glass">
       <div class="modal-head">
         <div><span class="eyebrow" id="modal-eyebrow">GESTÃO</span><h3 id="modal-title">Novo registro</h3></div>
-        <button class="icon-btn" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+        <button class="icon-btn" data-close-modal aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="modal-body"></div>
     </div>
   </div>
 
   <script src="js/00-supabase.js"></script>
-  <script src="js/gestao.js?v=20261003-2"></script>
+  <script src="js/gestao.js?v=20261010-3"></script>
 </body>
 </html>

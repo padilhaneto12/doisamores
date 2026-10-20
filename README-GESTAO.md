@@ -1,38 +1,43 @@
-# Dois Amores — V4 Gestão & Precificação
+# Dois Amores — Gestão: Insumos & Compras (V5)
 
-Esta versão adiciona uma página separada chamada `gestao.html`, acessível pelo menu do painel administrativo.
+A página `gestao.html` (acessível pelo botão **Insumos & Compras** do painel administrativo) agora tem somente duas áreas:
 
-## O que foi incluído
+- **Insumos** — cadastro com a mesma estrutura do app Doce Custo, no visual do site.
+- **Compras** — registro de compras por mês, independente de vendas/caixa.
 
-- Cadastro de insumos e custo de embalagem.
-- Registro de compras por mês.
-- Compras independentes de vendas/caixa.
-- Atualização do preço de referência do insumo quando uma nova compra é registrada.
-- Cadastro de receitas.
-- Vínculo opcional da receita a um produto já existente no cardápio.
-- Ingredientes e quantidades por receita.
-- Custos adicionais por receita: embalagem, mão de obra e custos indiretos.
-- Percentual de perda/quebra.
-- Cálculo de custo total e custo por unidade.
-- Calculadora de margem e preço sugerido.
-- Dashboard mensal de compras.
+Foram removidas da tela: Visão geral, Equipamentos, Receitas e Precificação. As tabelas de receitas/equipamentos continuam no banco (nenhum dado é apagado).
 
-## Configuração do banco
+## Insumos (igual ao app Doce Custo)
 
-Execute `supabase-gestao.sql` no SQL Editor do projeto Supabase para instalar ou atualizar as tabelas e políticas de acesso.
+- Busca por nome, com contador "X de Y".
+- Lista com quantidade, unidade, preço da embalagem e **pílula ▲/▼ com a variação** em relação ao preço anterior.
+- Custo calculado por g, ml ou unidade (e por kg/L).
+- **Aproveitamentos**: um insumo comprado pode gerar partes diferentes (ex.: bandeja de morangos → grandes e pequenos), com rendimento estimado e custo por peça.
+- **Histórico de preços** (últimos 5 no formulário), atualizado ao editar o preço e a cada compra registrada.
+- Campos extras do site, opcionais: categoria e fornecedor.
+- Unidades: g, kg, ml, L, un.
+- Não é possível excluir insumos que já aparecem em compras registradas.
 
-A página usa o mesmo Supabase do sistema atual e não altera a lógica de pedidos, estoque ou caixa.
+## Compras
+
+- Registro de compra com vários itens; o preço de referência de cada insumo passa a ser (valor pago ÷ nº de embalagens).
+- Compra com data anterior à última compra do insumo não sobrescreve o preço de referência.
+- Botão **Novo insumo** dentro do registro de compra, para cadastrar um insumo sem sair da tela.
+- Filtro por mês ou "Todos os meses" e detalhe dos itens.
+
+## Banco de dados (Supabase)
+
+- Instalação nova: execute `supabase-gestao.sql`.
+- Já usava a Gestão: execute `supabase-gestao-v5.sql` (adiciona `aproveitamentos` e `historico_precos` em `insumos`, sem apagar nada).
+
+Se o script v5 ainda não foi executado, o site continua salvando insumos normalmente, mas avisa que aproveitamentos e histórico só funcionam depois da migração.
 
 ## Acesso
 
-O acesso é feito com e-mail e senha de uma conta do Supabase Auth previamente autorizada como administradora.
-O acesso direto a `gestao.html` não concede permissão: as tabelas privadas também são protegidas por RLS no banco.
+Entrada por e-mail e senha de uma conta do Supabase Auth autorizada como administradora.
 
-### Configurar uma administradora
-
-1. No painel do Supabase, crie uma conta em **Authentication → Users** (ou use uma conta Auth existente) com o e-mail da administradora.
-2. Copie o UUID dessa conta.
-3. Depois de executar `supabase-gestao.sql`, autorize somente essa conta pelo SQL Editor:
+1. No Supabase, crie a conta em **Authentication → Users** e copie o UUID.
+2. No SQL Editor (depois de executar `supabase-gestao.sql`):
 
 ```sql
 insert into public.gestao_admins (user_id)
@@ -40,52 +45,6 @@ values ('UUID-DA-CONTA-AUTORIZADA')
 on conflict (user_id) do nothing;
 ```
 
-Repita os passos para cada administradora. Para revogar acesso, remova a conta autorizada:
+Para revogar: `delete from public.gestao_admins where user_id = 'UUID-DA-CONTA-AUTORIZADA';`
 
-```sql
-delete from public.gestao_admins
-where user_id = 'UUID-DA-CONTA-AUTORIZADA';
-```
-
-Ao atualizar uma instalação existente, execute novamente `supabase-gestao.sql` antes de acessar a página. O script substitui as políticas das tabelas de Gestão para remover regras antigas permissivas; até autorizar uma conta, ninguém terá acesso aos dados de Gestão.
-
-## V4.2 — correções e acabamento
-
-**Correções**
-- O `gestao.js` travava ao carregar (`currentMonth` usada antes de ser declarada), então nenhum botão funcionava.
-- Os botões "Cancelar" dos modais não fechavam (listener não era aplicado a botões criados depois).
-- Datas e filtro mensal usavam UTC; no Brasil, à noite, a data virava o dia/mês seguinte. Agora usa o horário local.
-- O campo de margem na Precificação perdia o foco a cada tecla digitada.
-
-**Melhorias**
-- Custo por g/ml/un. com precisão real (ex.: R$ 0,0380/g) e equivalente por kg/L, com pré-visualização ao cadastrar o insumo.
-- Compra antiga (data anterior à última compra do insumo) não sobrescreve mais o preço de referência.
-- Histórico de compras com "Todos os meses" e detalhe dos itens; total da compra calculado ao vivo.
-- Receitas: a unidade acompanha o insumo escolhido e há aviso quando a unidade é incompatível (ex.: insumo em kg usado em "un.").
-- Precificação mostra embalagem, mão de obra, indiretos e perda separados, lucro por unidade e por receita, e compara com o preço atual do produto no cardápio.
-- Autocompletar de categoria e fornecedor.
-
-**Regra do preço de referência:** ao registrar uma compra, o preço do insumo passa a ser (valor pago ÷ quantidade de embalagens) e todas as receitas refletem o novo custo automaticamente.
-
-
-## V4.2 — Energia e etapas de produção
-
-A Gestão & Precificação agora possui uma camada própria para energia e equipamentos:
-
-- Cadastro de equipamentos com potência em watts.
-- Tarifa de energia configurável em R$/kWh.
-- Etapas de produção dentro de cada receita.
-- Modo de cálculo por potência × tempo.
-- Modo alternativo de custo manual.
-- Uma receita pode ter várias etapas: cooktop de indução, micro-ondas, batedeira etc.
-- O custo de energia entra no custo total e no preço sugerido.
-- O cálculo é apresentado como **estimativa**, pois a potência nominal não significa consumo máximo contínuo.
-- Compras continuam separadas de vendas/faturamento/caixa.
-
-### Fórmula de energia
-
-`kWh = (potência W ÷ 1000) × (tempo em minutos ÷ 60)`
-
-`custo = kWh × tarifa R$/kWh`
-
-Para instalar/atualizar o banco, execute `supabase-gestao.sql` no SQL Editor do Supabase.
+O acesso direto a `gestao.html` não concede permissão: as tabelas são protegidas por RLS no banco.

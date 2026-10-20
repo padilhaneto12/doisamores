@@ -1,11 +1,65 @@
 
   async function tentarEntrarAdmin() {
-    const senhaDigitada = prompt("Senha do painel administrativo:");
-    if (senhaDigitada === null) return;
-    const { data, error } = await db.from(DB_TABLES.CONFIGURACOES).select('valor').eq('chave', 'senha_admin').single();
-    if (error || !data) { alert("Erro ao validar senha."); return; }
-    if (senhaDigitada === data.valor) abrirAdmin();
-    else alert("Senha incorreta!");
+    const overlay = $('admin-login-overlay');
+    $('admin-login-error').textContent = '';
+    $('admin-login-error').hidden = true;
+    try {
+      const {data, error} = await _supabase.auth.getSession();
+      if (error) throw error;
+      if (data.session && await isGestaoAdmin(data.session.user.id)) {
+        await abrirAdmin();
+        return;
+      }
+      $('admin-login-email').value = data.session?.user.email || '';
+      overlay.classList.add('open');
+      $('admin-login-email').focus();
+    } catch (error) {
+      console.error('Erro ao verificar acesso administrativo:', error);
+      $('admin-login-error').textContent = 'Não foi possível verificar o acesso. Tente novamente.';
+      $('admin-login-error').hidden = false;
+      overlay.classList.add('open');
+    }
+  }
+
+  async function isGestaoAdmin(userId) {
+    const {data, error} = await db.from('gestao_admins').select('user_id').eq('user_id', userId).maybeSingle();
+    if (error) throw error;
+    return Boolean(data);
+  }
+
+  function fecharLoginAdmin() {
+    $('admin-login-overlay').classList.remove('open');
+    $('admin-login-password').value = '';
+  }
+
+  async function entrarAdminComEmail(event) {
+    event.preventDefault();
+    const button = $('admin-login-submit');
+    const errorMessage = $('admin-login-error');
+    button.disabled = true;
+    errorMessage.hidden = true;
+    try {
+      const {data, error} = await _supabase.auth.signInWithPassword({
+        email: $('admin-login-email').value.trim(),
+        password: $('admin-login-password').value
+      });
+      if (error) throw error;
+      if (!data.user || !await isGestaoAdmin(data.user.id)) {
+        const {error: signOutError} = await _supabase.auth.signOut();
+        if (signOutError) console.error('Erro ao encerrar sessão sem permissão administrativa:', signOutError);
+        errorMessage.textContent = 'Esta conta não tem permissão para acessar o painel.';
+        errorMessage.hidden = false;
+        return;
+      }
+      fecharLoginAdmin();
+      await abrirAdmin();
+    } catch (error) {
+      console.error('Erro ao entrar no painel administrativo:', error);
+      errorMessage.textContent = 'Não foi possível entrar. Confira o e-mail e a senha e tente novamente.';
+      errorMessage.hidden = false;
+    } finally {
+      button.disabled = false;
+    }
   }
 
   function abrirGestao() {
@@ -26,7 +80,6 @@
     await carregarStatusLojaNuvem();
     await carregarModoEncomendaNuvem();
     await carregarCuponsNuvem();
-    await carregarAvaliadoresNuvem();
     
     atualizarMetricasOverview();
     carregarTabelaAdmin();
@@ -40,6 +93,16 @@
     $('admin-modal-overlay').classList.add('open');
   }
 
+  $('admin-login-form').addEventListener('submit', entrarAdminComEmail);
+  $('admin-login-cancel').addEventListener('click', fecharLoginAdmin);
+  $('admin-login-close').addEventListener('click', fecharLoginAdmin);
+  $('admin-login-overlay').addEventListener('click', event => {
+    if (event.target === $('admin-login-overlay')) fecharLoginAdmin();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && $('admin-login-overlay').classList.contains('open')) fecharLoginAdmin();
+  });
+
   function mudarAbaAdmin(aba) {
     document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
@@ -52,13 +115,12 @@
       'pedidos': 'Lista de Pedidos',
       'coletivos': 'Pedidos Coletivos',
       'manual': 'Novo Pedido Manual',
-      'cupons': 'Cupons de Desconto',
-      'avaliadores': 'Avaliadores Google'
+      'cupons': 'Cupons de Desconto'
     };
 
     $('admin-title-header').innerText = titulosHeader[aba] || 'Painel Admin';
 
-    const indexMap = { 'overview': 1, 'estoque': 2, 'docinhos': 3, 'presentes': 4, 'pedidos': 5, 'coletivos': 6, 'manual': 7, 'cupons': 8, 'avaliadores': 9 };
+    const indexMap = { 'overview': 1, 'estoque': 2, 'docinhos': 3, 'presentes': 4, 'pedidos': 5, 'coletivos': 6, 'manual': 7, 'cupons': 8 };
     if (indexMap[aba]) {
       document.querySelector(`.admin-sidebar .admin-nav-btn:nth-child(${indexMap[aba]})`).classList.add('active');
     }
@@ -71,6 +133,14 @@
     else if (aba === 'coletivos') carregarListaColetivosAdmin();
   }
 
+  function selecionarTipoPedidoManual(tipo) {
+    const coletivo = tipo === 'coletivo';
+    $('manual-type-individual').classList.toggle('active', !coletivo);
+    $('manual-type-coletivo').classList.toggle('active', coletivo);
+    $('manual-individual-form').hidden = coletivo;
+    if (coletivo) abrirPedidoColetivoManual();
+  }
+
   function toggleManualEntrega() {
     const tipo = $('manual-recebimento').value;
     $('manual-endereco-box').style.display = (tipo === 'Entrega') ? 'block' : 'none';
@@ -78,13 +148,21 @@
     calcularTotalManual();
   }
 
-  let caixasManuaisPendentes = [];
+  let itensManuaisSelecionados = [];
+
+  function escaparHtmlManual(valor) {
+    return String(valor ?? '').replace(/[&<>'"]/g, caractere => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[caractere]));
+  }
 
   function carregarTabelaManualAdmin() {
-    caixasManuaisPendentes = [];
-    const tbody = $('manual-produtos-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+    itensManuaisSelecionados = [];
+    const lista = $('manual-itens-lista');
+    if (!lista) return;
+    lista.innerHTML = '<p class="manual-products-empty">Nenhum produto adicionado.</p>';
+    $('manual-produto-pesquisa').value = '';
+    renderizarOpcoesProdutosManual();
 
     const dataMinimaManual = obterDataMinimaEncomenda();
     const manualDataEl = $('manual-data');
@@ -93,29 +171,79 @@
       manualDataEl.value = dataMinimaManual;
     }
 
-    produtosCardapio.forEach((prod, index) => {
-      const precoExibicao = prod.id === 'caixa_mista' ? 55.00 : prod.price;
-      const isCaixa = prod.id === 'caixa_mista';
-      
-      tbody.innerHTML += `
-        <tr>
-          <td>
-            <div style="font-weight: 600; color: var(--creme);">${prod.name}</div>
-            <small style="color: var(--creme-dim);">${prod.id}</small>
-          </td>
-          <td>R$ <span id="manual-preco-${index}">${precoExibicao.toFixed(2)}</span></td>
-          <td style="text-align: center;">
-            <div style="display: inline-flex; align-items: center; gap: 8px;">
-              <button class="cart-btn-qty" type="button" onclick="mudarQtdManual(${index}, -1)">-</button>
-              <input type="number" id="manual-qtd-${index}" class="admin-input-qtd" value="0" min="0" ${isCaixa ? 'readonly style="background:rgba(201,151,74,0.1); color:var(--ouro);"' : 'oninput="calcularTotalManual()"'}>
-              <button class="cart-btn-qty" type="button" onclick="mudarQtdManual(${index}, 1)">+</button>
-            </div>
-            ${isCaixa ? '<br><small style="color:var(--ouro); font-size:0.7rem; cursor:pointer;" onclick="abrirAdminModalCaixa()">+ Configurar Caixa</small>' : ''}
-          </td>
-        </tr>
-      `;
-    });
     calcularTotalManual();
+  }
+
+  function renderizarOpcoesProdutosManual() {
+    const select = $('manual-produto-select');
+    if (!select) return;
+    const pesquisa = $('manual-produto-pesquisa').value.trim().toLocaleLowerCase('pt-BR');
+    const produtos = produtosCardapio.filter(prod => `${prod.name} ${prod.id}`.toLocaleLowerCase('pt-BR').includes(pesquisa));
+    select.innerHTML = '<option value="">Selecione um produto...</option>' + produtos.map(prod => {
+      const preco = prod.id === 'caixa_mista' ? 'R$ 55,00 / 65,00' : `R$ ${Number(prod.price || 0).toFixed(2)}`;
+      return `<option value="${escaparHtmlManual(prod.id)}">${escaparHtmlManual(prod.name)} (${preco})</option>`;
+    }).join('');
+    select.disabled = produtos.length === 0;
+    if (produtos.length === 0) select.innerHTML = '<option value="">Nenhum produto encontrado</option>';
+  }
+
+  function filtrarProdutosManual() { renderizarOpcoesProdutosManual(); }
+
+  function adicionarProdutoManual() {
+    const produtoId = $('manual-produto-select').value;
+    if (!produtoId) { alert('Selecione um produto para adicionar.'); return; }
+    if (produtoId === 'caixa_mista') {
+      abrirAdminModalCaixa();
+      return;
+    }
+    const produto = produtosCardapio.find(prod => String(prod.id) === produtoId);
+    if (!produto) { alert('O produto selecionado não está mais disponível. Atualize o painel e tente novamente.'); return; }
+    itensManuaisSelecionados.push({id: produto.id, name: produto.name, price: Number(produto.price) || 0, quantity: 1, obs: '', feito: false});
+    $('manual-produto-select').value = '';
+    renderizarItensManuais();
+  }
+
+  function renderizarItensManuais() {
+    const lista = $('manual-itens-lista');
+    if (!lista) return;
+    if (!itensManuaisSelecionados.length) {
+      lista.innerHTML = '<p class="manual-products-empty">Nenhum produto adicionado.</p>';
+      calcularTotalManual();
+      return;
+    }
+    lista.innerHTML = itensManuaisSelecionados.map((item, index) => `
+      <div class="manual-product-row">
+        <div class="manual-product-name"><strong>${escaparHtmlManual(item.name)}</strong>${item.obs ? `<small>${escaparHtmlManual(item.obs)}</small>` : ''}</div>
+        <span class="manual-product-price">R$ ${Number(item.price).toFixed(2)}</span>
+        <div class="manual-product-quantity">
+          <button class="cart-btn-qty" type="button" aria-label="Diminuir quantidade" onclick="mudarQtdItemManual(${index}, -1)">−</button>
+          <input class="admin-input-qtd" type="number" min="1" step="1" value="${Number(item.quantity)}" aria-label="Quantidade de ${escaparHtmlManual(item.name)}" onchange="definirQtdItemManual(${index}, this.value)">
+          <button class="cart-btn-qty" type="button" aria-label="Aumentar quantidade" onclick="mudarQtdItemManual(${index}, 1)">+</button>
+        </div>
+        <strong class="manual-product-subtotal">R$ ${(Number(item.price) * Number(item.quantity)).toFixed(2)}</strong>
+        <button class="btn-sm btn-delete" type="button" aria-label="Remover ${escaparHtmlManual(item.name)}" onclick="removerItemManual(${index})"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    `).join('');
+    calcularTotalManual();
+  }
+
+  function mudarQtdItemManual(index, delta) {
+    const item = itensManuaisSelecionados[index];
+    if (!item) return;
+    item.quantity = Math.max(1, (parseInt(item.quantity, 10) || 1) + delta);
+    renderizarItensManuais();
+  }
+
+  function definirQtdItemManual(index, quantidade) {
+    const item = itensManuaisSelecionados[index];
+    if (!item) return;
+    item.quantity = Math.max(1, parseInt(quantidade, 10) || 1);
+    renderizarItensManuais();
+  }
+
+  function removerItemManual(index) {
+    itensManuaisSelecionados.splice(index, 1);
+    renderizarItensManuais();
   }
 
   function abrirAdminModalCaixa() {
@@ -180,45 +308,14 @@
     let obsSabores = Object.entries(adminSaboresCaixaTemp).filter(([nome, qtd]) => qtd > 0).map(([nome, qtd]) => `${qtd}x ${nome}`).join(', ');
     let precoCaixa = calcularAdminPrecoCaixaTemp();
 
-    caixasManuaisPendentes.push({ name: 'Caixa Mista (6 Morangos)', price: precoCaixa, quantity: 1, obs: `Sabores: ${obsSabores}` });
-    const indexCaixa = produtosCardapio.findIndex(p => p.id === 'caixa_mista');
-    if (indexCaixa >= 0) {
-      const input = $(`manual-qtd-${indexCaixa}`);
-      if (input) input.value = parseInt(input.value || 0) + 1;
-    }
+    itensManuaisSelecionados.push({id: 'caixa_mista', name: 'Caixa Mista (6 Morangos)', price: precoCaixa, quantity: 1, obs: `Sabores: ${obsSabores}`, feito: false});
     fecharAdminModalCaixa();
-    calcularTotalManual();
-  }
-
-  function mudarQtdManual(index, delta) {
-    const prod = produtosCardapio[index];
-    if (prod.id === 'caixa_mista') {
-      if (delta > 0) abrirAdminModalCaixa();
-      else {
-        let input = $(`manual-qtd-${index}`);
-        let atual = parseInt(input.value) || 0;
-        if (atual > 0) { input.value = atual - 1; if (caixasManuaisPendentes.length > 0) caixasManuaisPendentes.pop(); calcularTotalManual(); }
-      }
-      return;
-    }
-    const input = $(`manual-qtd-${index}`);
-    if (input) {
-      let atual = parseInt(input.value) || 0;
-      input.value = Math.max(0, atual + delta);
-      calcularTotalManual();
-    }
+    $('manual-produto-select').value = '';
+    renderizarItensManuais();
   }
 
   function calcularTotalManual() {
-    let totalGeral = 0;
-    produtosCardapio.forEach((prod, index) => {
-      const input = $(`manual-qtd-${index}`);
-      const precoEl = $(`manual-preco-${index}`);
-      if (input && precoEl && prod.id !== 'caixa_mista') {
-        totalGeral += (parseInt(input.value) || 0) * (parseFloat(precoEl.innerText) || 0);
-      }
-    });
-    caixasManuaisPendentes.forEach(cx => { totalGeral += cx.price * cx.quantity; });
+    let totalGeral = itensManuaisSelecionados.reduce((soma, item) => soma + Number(item.price) * Number(item.quantity), 0);
     if ($('manual-recebimento').value === 'Entrega') {
       totalGeral += parseFloat($('manual-taxa-entrega').value) || 0;
     }
@@ -236,20 +333,10 @@
     const taxaEntregaManual = parseFloat($('manual-taxa-entrega').value) || 0;
 
     if (!cliente) { alert("Preencha o nome do cliente."); return; }
+    if (!itensManuaisSelecionados.length) { alert("Adicione pelo menos um produto ao pedido."); return; }
     if (recebimento === 'Entrega' && !endereco) { alert("Preencha o endereço de entrega."); return; }
 
-    let itensManual = [];
-    produtosCardapio.forEach((prod, index) => {
-      const input = $(`manual-qtd-${index}`);
-      const precoEl = $(`manual-preco-${index}`);
-      if (input && precoEl) {
-        let qtd = parseInt(input.value) || 0;
-        if (qtd > 0 && prod.id !== 'caixa_mista') {
-          itensManual.push({ id: prod.id, name: prod.name, price: parseFloat(precoEl.innerText) || 0, quantity: qtd, obs: '', feito: false });
-        }
-      }
-    });
-    caixasManuaisPendentes.forEach(cx => itensManual.push({ ...cx, feito: false }));
+    const itensManual = itensManuaisSelecionados.map(item => ({...item, feito: false}));
 
     let totalGeral = calcularTotalManual();
     const pedidoId = 'ped_' + Date.now();
@@ -279,7 +366,15 @@
     $('manual-cliente').value = '';
     $('manual-whatsapp').value = '';
     $('manual-endereco').value = '';
-    caixasManuaisPendentes = [];
+    itensManuaisSelecionados = [];
+    renderizarOpcoesProdutosManual();
+    renderizarItensManuais();
     mudarAbaAdmin('pedidos');
   }
 
+  if (new URLSearchParams(window.location.search).get('abrirAdmin') === '1') {
+    window.addEventListener('load', () => {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`);
+      tentarEntrarAdmin();
+    }, {once: true});
+  }

@@ -1,6 +1,6 @@
--- Dois Amores — Gestão & Precificação V4
--- Mantém compras separadas do faturamento/caixa e adiciona equipamentos,
--- tarifa de energia e etapas de produção.
+-- Dois Amores — Gestão: Insumos & Compras (V5)
+-- Mantém compras separadas do faturamento/caixa. As tabelas de receitas/equipamentos
+-- permanecem para não perder dados, mas a tela de Gestão usa apenas insumos e compras.
 
 create extension if not exists pgcrypto;
 
@@ -9,8 +9,14 @@ create table if not exists public.insumos (
   id uuid primary key default gen_random_uuid(), nome text not null, categoria text, fornecedor text,
   unidade_compra text not null default 'kg', quantidade_embalagem numeric(14,4) not null default 1,
   preco_compra numeric(14,2) not null default 0, created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  aproveitamentos jsonb not null default '[]'::jsonb,
+  historico_precos jsonb not null default '[]'::jsonb
 );
+-- V5: instalações antigas recebem as colunas novas do cadastro de insumos.
+alter table public.insumos
+  add column if not exists aproveitamentos jsonb not null default '[]'::jsonb,
+  add column if not exists historico_precos jsonb not null default '[]'::jsonb;
 create table if not exists public.compras (
   id uuid primary key default gen_random_uuid(), data_compra date not null default current_date,
   fornecedor text, observacao text, total numeric(14,2) not null default 0, created_at timestamptz not null default now()

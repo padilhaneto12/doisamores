@@ -411,4 +411,4 @@
 
   let colaboradoresColetivo = [];
   let taxaEntregaColetivo = 0;
-
+  let pedidoColetivoManual = false;

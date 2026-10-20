@@ -91,14 +91,17 @@
   }
 
   function abrirModalPedidoColetivo() {
+    pedidoColetivoManual = false;
     colaboradoresColetivo = [];
     $('coletivo-resp-nome').value = '';
     $('coletivo-resp-zap').value = '';
     $('coletivo-cep').value = '';
     $('coletivo-rua').value = '';
+    $('coletivo-rua').readOnly = true;
     $('coletivo-numero').value = '';
     $('coletivo-complemento').value = '';
     $('coletivo-bairro').value = '';
+    $('coletivo-bairro').readOnly = true;
     taxaEntregaColetivo = 0;
 
     const dataInput = $('coletivo-resp-data');
@@ -112,7 +115,31 @@
     $('modal-pedido-coletivo').classList.add('open');
   }
 
-  function fecharModalPedidoColetivo() { $('modal-pedido-coletivo').classList.remove('open'); }
+  function abrirPedidoColetivoManual() {
+    abrirModalPedidoColetivo();
+    pedidoColetivoManual = true;
+    $('coletivo-rua').readOnly = false;
+    $('coletivo-bairro').readOnly = false;
+    $('coletivo-resp-data').min = '';
+    const hoje = new Date();
+    $('coletivo-resp-data').value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+    $('modal-pedido-coletivo').querySelector('h3').innerHTML = '<i class="fa-solid fa-users"></i> Pedido Coletivo Manual';
+    $('modal-pedido-coletivo').querySelector('p[style*="margin-bottom: 20px"]').textContent = 'Cadastre um pedido coletivo recebido por telefone ou balcão.';
+    $('coletivo-resp-data').previousElementSibling.textContent = 'Data da Encomenda:';
+    $('modal-pedido-coletivo').querySelector('button[onclick="confirmarPedidoColetivo()"]').textContent = 'Salvar Pedido Coletivo';
+  }
+
+  function fecharModalPedidoColetivo() {
+    $('modal-pedido-coletivo').classList.remove('open');
+    pedidoColetivoManual = false;
+    $('manual-type-individual')?.classList.add('active');
+    $('manual-type-coletivo')?.classList.remove('active');
+    if ($('manual-individual-form')) $('manual-individual-form').hidden = false;
+    $('modal-pedido-coletivo').querySelector('h3').innerHTML = '<i class="fa-solid fa-users"></i> Novo Pedido Coletivo';
+    $('modal-pedido-coletivo').querySelector('p[style*="margin-bottom: 20px"]').textContent = 'Junte os pedidos do escritório ou grupo em uma única entrega! Antecedência mínima de 2 dias.';
+    $('coletivo-resp-data').previousElementSibling.textContent = 'Data da Encomenda (Mínimo 2 dias):';
+    $('modal-pedido-coletivo').querySelector('button[onclick="confirmarPedidoColetivo()"]').textContent = 'Confirmar e Enviar Pedido Coletivo 💬';
+  }
 
   function obterProdutosValidosFestival() {
     return produtosCardapio.filter(p => {
@@ -332,8 +359,8 @@
     const complemento = $('coletivo-complemento')?.value.trim() || '';
     const bairro = $('coletivo-bairro')?.value.trim() || '';
 
-    if (!respNome || !respZap || !respData || (!coletivoEditandoTemp && !cep) || !rua || !numero || !bairro) { alert('Preencha todos os dados do responsável e do endereço.'); return; }
-    if (!coletivoEditandoTemp && respData < obterDataMinimaColetivo()) {
+    if (!respNome || !respZap || !respData || (!pedidoColetivoManual && !coletivoEditandoTemp && !cep) || !rua || !numero || !bairro) { alert('Preencha todos os dados do responsável e do endereço.'); return; }
+    if (!pedidoColetivoManual && !coletivoEditandoTemp && respData < obterDataMinimaColetivo()) {
       alert('Pedidos coletivos precisam ser feitos com pelo menos 2 dias de antecedência.');
       return;
     }
@@ -388,7 +415,14 @@
     const { error } = await db.from(DB_TABLES.PEDIDOS_COLETIVOS).insert([novoColetivoSupabase]);
     if (error) { alert("Erro: " + error.message); return; }
 
+    const manual = pedidoColetivoManual;
     fecharModalPedidoColetivo();
+    if (manual) {
+      await carregarListaColetivosAdmin();
+      atualizarMetricasOverview();
+      alert('Pedido coletivo manual salvo com sucesso!');
+      return;
+    }
     let txt = `Olá! Sou *${respNome}* e envio um *Pedido Coletivo*:\n\n📅 *Data:* ${dataFormatadaBr}\n📍 *Endereço:* ${enderecoCompleto}\n\n`;
     if (fretePedido > 0) txt += `🚚 *Frete:* ${fretePedido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
     colaboradoresColetivo.forEach(c => {

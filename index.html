@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dois Amores Doceria — Festival do Morango | Ponta Grossa, PR</title>
 <meta name="description" content="Doceria artesanal em Ponta Grossa, PR. Confira o Festival do Morango e peça pelo WhatsApp.">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261010-8">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -34,6 +35,28 @@
     <a href="#coletivo" class="banner-coletivo-link" aria-label="Aproveite o Frete Grátis no Pedido Coletivo">
       <img src="images/coletivo.png" alt="Pedido Coletivo tem Frete Grátis — Dois Amores Doceria" class="banner-coletivo-img">
     </a>
+  </div>
+</section>
+
+<section class="product-marquee" aria-label="Destaques da Dois Amores">
+  <span class="visually-hidden">Morango cravejado, Morango do amor, Sobremesas, Presentes, Docinhos e Pedidos coletivos.</span>
+  <div class="product-marquee-track" aria-hidden="true">
+    <div class="product-marquee-group">
+      <span>Morango cravejado</span><i>✦</i>
+      <span>Morango do amor</span><i>✦</i>
+      <span>Sobremesas</span><i>✦</i>
+      <span>Presentes</span><i>✦</i>
+      <span>Docinhos</span><i>✦</i>
+      <span>Pedidos coletivos</span><i>✦</i>
+    </div>
+    <div class="product-marquee-group">
+      <span>Morango cravejado</span><i>✦</i>
+      <span>Morango do amor</span><i>✦</i>
+      <span>Sobremesas</span><i>✦</i>
+      <span>Presentes</span><i>✦</i>
+      <span>Docinhos</span><i>✦</i>
+      <span>Pedidos coletivos</span><i>✦</i>
+    </div>
   </div>
 </section>
 
@@ -297,7 +320,7 @@
         </div>
         <div>
           <label for="coletivo-bairro" style="font-size: 0.75rem; color: var(--creme-dim);">Bairro:</label>
-          <input type="text" id="coletivo-bairro" class="cart-input" readonly>
+          <input type="text" id="coletivo-bairro" class="cart-input" readonly oninput="calcularTaxaColetivo(this.value)">
         </div>
       </div>
     </div>
@@ -498,10 +521,6 @@
       <input type="text" id="customer-whatsapp" class="cart-input" placeholder="Ex: 42999998888">
     </div>
     <div class="cart-form-group">
-      <label for="customer-email">Seu E-mail (Opcional):</label>
-      <input type="email" id="customer-email" class="cart-input" placeholder="seuemail@exemplo.com">
-    </div>
-    <div class="cart-form-group">
       <label for="payment-method">Forma de Pagamento:</label>
       <select id="payment-method" class="cart-input">
         <option value="Pix">Pix</option>
@@ -517,7 +536,7 @@
       </div>
     </div>
     <div class="cart-form-group">
-      <label for="order-date">Data para Retirada / Entrega: <span id="encomenda-aviso-tag" style="display:none; color:var(--ouro); font-size:0.75rem; font-weight:600;">(Mínimo 4 dias de antecedência)</span></label>
+      <label for="order-date">Data para Retirada / Entrega:</label>
       <input type="date" id="order-date" class="cart-input">
     </div>
     <div id="address-container">
@@ -723,8 +742,7 @@
           <button class="admin-nav-btn" onclick="mudarAbaAdmin('coletivos')"><i class="fa-solid fa-users-rectangle"></i> Pedidos Coletivos 👥</button>
           <button class="admin-nav-btn" onclick="mudarAbaAdmin('manual')"><i class="fa-solid fa-cart-plus"></i> Novo Pedido Manual</button>
           <button class="admin-nav-btn" onclick="mudarAbaAdmin('cupons')"><i class="fa-solid fa-ticket"></i> Cupons de Desconto</button>
-          <button class="admin-nav-btn" onclick="mudarAbaAdmin('avaliadores')"><i class="fa-solid fa-star"></i> Avaliadores Google</button>
-          <button class="admin-nav-btn admin-nav-gestao" onclick="window.location.href='gestao.html'"><i class="fa-solid fa-calculator"></i> Gestão & Precificação</button>
+          <button class="admin-nav-btn admin-nav-gestao" onclick="window.location.href='gestao.html'"><i class="fa-solid fa-basket-shopping"></i> Insumos & Compras</button>
         </div>
       </div>
       <div>
@@ -798,7 +816,7 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+          <div class="admin-overview-panels">
             <div class="admin-card-box">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
                 <h4 style="margin:0; color: var(--ouro); font-size: 1.05rem;"><i class="fa-solid fa-fire"></i> Últimos Pedidos Recebidos</h4>
@@ -1011,7 +1029,13 @@
         <div id="aba-manual" class="admin-tab-content">
           <div class="admin-card-box highlight">
             <h4 style="margin:0 0 6px 0; color: var(--ouro); font-size: 1.05rem;">📝 Lançamento Manual de Pedido</h4>
-            <p style="margin:0 0 16px 0; font-size: 0.85rem; color: var(--creme-dim);">Monte o pedido para um cliente por telefone/balcão.</p>
+            <p style="margin:0 0 16px 0; font-size: 0.85rem; color: var(--creme-dim);">Escolha o tipo de pedido que deseja cadastrar.</p>
+            <div class="manual-order-type">
+              <button class="manual-order-type-btn active" id="manual-type-individual" type="button" onclick="selecionarTipoPedidoManual('individual')"><i class="fa-solid fa-user"></i><span><strong>Pedido individual</strong><small>Um cliente e uma lista de produtos</small></span></button>
+              <button class="manual-order-type-btn" id="manual-type-coletivo" type="button" onclick="selecionarTipoPedidoManual('coletivo')"><i class="fa-solid fa-users"></i><span><strong>Pedido coletivo</strong><small>Responsável, endereço e pedidos por colaborador</small></span></button>
+            </div>
+            <div id="manual-individual-form">
+            <p style="margin:0 0 16px 0; font-size: 0.85rem; color: var(--creme-dim);">Monte o pedido individual para um cliente por telefone ou balcão.</p>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
               <div>
@@ -1060,19 +1084,13 @@
             </div>
 
             <div style="margin-bottom: 16px;">
-              <label style="font-size: 0.75rem; color: var(--ouro); font-weight: bold; display: block; margin-bottom: 8px;">Produtos:</label>
-              <div class="admin-table-wrapper">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th style="width: 50%;">Produto</th>
-                      <th style="width: 25%;">Preço Un.</th>
-                      <th style="width: 25%; text-align: center;">Qtd</th>
-                    </tr>
-                  </thead>
-                  <tbody id="manual-produtos-tbody"></tbody>
-                </table>
+              <label for="manual-produto-pesquisa" style="font-size: 0.75rem; color: var(--ouro); font-weight: bold; display: block; margin-bottom: 8px;">Buscar e adicionar produtos:</label>
+              <div class="manual-product-picker">
+                <input type="search" id="manual-produto-pesquisa" class="cart-input" autocomplete="off" placeholder="Digite o nome do produto..." oninput="filtrarProdutosManual(this.value)">
+                <select id="manual-produto-select" class="cart-input" aria-label="Produtos disponíveis"></select>
+                <button class="btn-sm" type="button" onclick="adicionarProdutoManual()"><i class="fa-solid fa-plus"></i> Adicionar</button>
               </div>
+              <div id="manual-itens-lista" class="manual-selected-products"></div>
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 14px 20px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 16px;">
@@ -1083,6 +1101,7 @@
             <button class="btn" style="width: 100%; justify-content: center; background: var(--ouro); color: var(--carvao);" onclick="salvarPedidoManual()">
               💾 Gerar e Salvar Pedido Manual
             </button>
+            </div>
           </div>
         </div>
 
@@ -1128,22 +1147,6 @@
           </div>
         </div>
 
-        <!-- ABA: AVALIADORES GOOGLE -->
-        <div id="aba-avaliadores" class="admin-tab-content">
-          <div class="admin-card-box highlight">
-            <h4 style="margin:0 0 8px 0; color: var(--ouro); font-size: 1rem;">⭐ Gerenciar Lista de Avaliadores do Google</h4>
-            <p style="font-size: 0.85rem; color: var(--creme-dim); margin-bottom: 14px;">
-              Insira os nomes das pessoas que avaliaram a doceria no Google (um por linha). Ganham <strong>3 docinhos cortesia</strong>!
-            </p>
-            <div class="cart-form-group" style="margin-bottom: 14px;">
-              <textarea id="input-lista-avaliadores" class="cart-input" rows="8" placeholder="Ex:&#10;Taisa Desplanches&#10;Patricia Santos"></textarea>
-            </div>
-            <button class="btn-sm" style="padding: 12px 24px; background: var(--ouro); font-weight: bold; font-size: 0.9rem;" onclick="salvarListaAvaliadores()">
-              💾 Salvar Lista de Avaliadores
-            </button>
-          </div>
-        </div>
-
         <div style="margin-top: 28px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px;">
           <div style="display: flex; align-items: end; gap: 10px; flex-wrap: wrap;">
             <div>
@@ -1173,13 +1176,36 @@
 
 <div id="relatorio-print-area"></div>
 
+<div class="custom-modal-overlay admin-login-overlay" id="admin-login-overlay" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+  <form class="admin-login-modal glass" id="admin-login-form">
+    <button class="admin-login-close" type="button" id="admin-login-close" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    <div class="admin-login-mark"><i class="fa-solid fa-store"></i></div>
+    <span class="admin-login-eyebrow">Dois Amores · Acesso restrito</span>
+    <h1 id="admin-login-title">Painel<br><em>Admin</em></h1>
+    <p>Entre com sua conta administrativa para acessar o painel e a Gestão.</p>
+    <div class="admin-login-field">
+      <label for="admin-login-email">E-mail</label>
+      <input class="admin-login-input" id="admin-login-email" type="email" autocomplete="username" required>
+    </div>
+    <div class="admin-login-field">
+      <label for="admin-login-password">Senha</label>
+      <input class="admin-login-input" id="admin-login-password" type="password" autocomplete="current-password" required>
+    </div>
+    <p class="admin-login-error" id="admin-login-error" role="alert" aria-live="polite" hidden></p>
+    <div class="admin-login-actions">
+      <button class="admin-login-button secondary" type="button" id="admin-login-cancel">Cancelar</button>
+      <button class="admin-login-button primary" type="submit" id="admin-login-submit"><i class="fa-solid fa-lock"></i> Entrar</button>
+    </div>
+  </form>
+</div>
+
 <!-- SCRIPTS -->
 <script src="js/00-supabase.js"></script>
 <script src="js/00-utils.js"></script>
 <script src="js/01-core.js"></script>
 <script src="js/02-catalogo.js"></script>
-<script src="js/03-coletivos.js?v=20261002-3"></script>
-<script src="js/04-admin-manual.js"></script>
+<script src="js/03-coletivos.js?v=20261010-2"></script>
+<script src="js/04-admin-manual.js?v=20261010-5"></script>
 <script src="js/05-pedidos.js?v=20261003-1"></script>
 <script src="js/06-cupons.js"></script>
 <script src="js/07-produtos-estoque.js"></script>
