@@ -196,6 +196,7 @@ html,body{background-color:var(--pv-bg);background-image:radial-gradient(circle 
 .pedido-coletivo-destaque{background:rgba(18,8,11,.68)}
 .steps,.local{background:rgba(27,11,16,.68)}
 .novidades-section{background:transparent}
+.avaliacoes-section{background:linear-gradient(180deg,rgba(18,8,11,.72),rgba(27,11,16,.72));padding:72px 0}
 
 /* ---------- Dashboard da Gestão ---------- */
 .dash-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;margin-bottom:18px}

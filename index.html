@@ -10,8 +10,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261021-2">
-<link rel="stylesheet" href="css/painel-vinho.css?v=20261021-4">
+<link rel="stylesheet" href="css/style.css?v=20261021-3">
+<link rel="stylesheet" href="css/painel-vinho.css?v=20261021-5">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -84,30 +84,7 @@
 </section>
 
 <section class="about" id="sobre">
-  <div class="wrap about-grid">
-    <div class="about-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <span class="eyebrow">Avaliações do Google ⭐</span>
-        <span id="review-counter" style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">1 / 7</span>
-      </div>
-      
-      <div class="review-stars">
-        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-      </div>
-      
-      <p class="review-text" id="review-text-content">
-        “Os doces de morango são maravilhosos! Muito bem feitos, com ingredientes de ótima qualidade, sabor delicioso e na medida certa de doce. O morango estava fresquinho e a apresentação é linda, tudo muito caprichado. Dá para perceber o cuidado em cada detalhe. Super recomendo! 🍓”
-      </p>
-      
-      <div class="review-author">
-        <span id="review-author-name">— Taisa Desplanches</span>
-        <div class="review-controls">
-          <button class="review-btn" onclick="mudarAvaliacao(-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
-          <button class="review-btn" onclick="mudarAvaliacao(1)" aria-label="Próxima"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-      </div>
-    </div>
-    
+  <div class="wrap about-grid about-solo">
     <div>
       <p class="eyebrow">Sobre a doceria</p>
       <h2>A essência do sabor artesanal.</h2>
@@ -152,6 +129,33 @@
     </div>
     
     <div id="menu-categorias-container"></div>
+  </div>
+</section>
+
+<section class="avaliacoes-section" id="avaliacoes">
+  <div class="wrap">
+    <div class="about-card avaliacoes-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span class="eyebrow">Avaliações do Google ⭐</span>
+        <span id="review-counter" style="font-size: 0.75rem; color: var(--ouro); font-weight: bold;">1 / 7</span>
+      </div>
+      
+      <div class="review-stars">
+        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+      </div>
+      
+      <p class="review-text" id="review-text-content">
+        “Os doces de morango são maravilhosos! Muito bem feitos, com ingredientes de ótima qualidade, sabor delicioso e na medida certa de doce. O morango estava fresquinho e a apresentação é linda, tudo muito caprichado. Dá para perceber o cuidado em cada detalhe. Super recomendo! 🍓”
+      </p>
+      
+      <div class="review-author">
+        <span id="review-author-name">— Taisa Desplanches</span>
+        <div class="review-controls">
+          <button class="review-btn" onclick="mudarAvaliacao(-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="review-btn" onclick="mudarAvaliacao(1)" aria-label="Próxima"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
