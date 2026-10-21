@@ -16,9 +16,9 @@
   const currentMonth = () => todayStr().slice(0, 7);
 
   const state = {
-    view: 'insumos',
+    view: 'dashboard',
     insumos: [], compras: [], itensCompras: [],
-    busca: '', compraMes: currentMonth(), compraTodos: false
+    busca: '', compraMes: currentMonth(), compraTodos: false, dashMes: currentMonth()
   };
 
   const $ = (id) => document.getElementById(id);
@@ -137,18 +137,114 @@
   }
 
   function navigate(view) {
-    if (!['insumos', 'compras'].includes(view)) view = 'insumos';
+    if (!['dashboard', 'insumos', 'compras'].includes(view)) view = 'dashboard';
     state.view = view;
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${view}`));
     document.querySelectorAll('.side-link[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === view));
-    const meta = {insumos: ['CADASTRO', 'Insumos'], compras: ['CONTROLE', 'Compras']};
+    const meta = {dashboard: ['VISÃO GERAL', 'Dashboard'], insumos: ['CADASTRO', 'Insumos'], compras: ['CONTROLE', 'Compras']};
     $('view-eyebrow').textContent = meta[view][0]; $('view-title').textContent = meta[view][1];
+    if (view === 'dashboard') renderDashboard();
     if (view === 'insumos') renderInsumos();
     if (view === 'compras') renderCompras();
     $('sidebar').classList.remove('open');
   }
 
   /* ---------- INSUMOS ---------- */
+  /* ---------- Dashboard ---------- */
+  const MONTHS_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const monthShift = (ym, delta) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + delta, 1); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`; };
+  const monthLabel = (ym) => { const [y, m] = ym.split('-').map(Number); return `${MONTHS_PT[m - 1]}/${String(y).slice(2)}`; };
+  const monthLong = (ym) => { const [y, m] = ym.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('pt-BR', {month: 'long', year: 'numeric'}); };
+  const fmtQty = (v) => num(v).toLocaleString('pt-BR', {maximumFractionDigits: 2});
+  const itemTotal = (it) => num(it.total) || num(it.quantidade) * num(it.preco_unitario);
+
+  function dashboardData(month) {
+    const compraById = new Map(state.compras.map(c => [c.id, c]));
+    const monthOf = (c) => String(c.data_compra || '').slice(0, 7);
+    const comprasMes = state.compras.filter(c => monthOf(c) === month);
+    const itens = state.itensCompras.filter(it => { const c = compraById.get(it.compra_id); return c && monthOf(c) === month; });
+    const spend = (arr) => arr.reduce((t, c) => t + num(c.total), 0);
+    const total = spend(comprasMes);
+    const prevTotal = spend(state.compras.filter(c => monthOf(c) === monthShift(month, -1)));
+
+    const byInsumo = new Map();
+    itens.forEach(it => {
+      const ins = findInsumo(it.insumo_id);
+      const key = String(it.insumo_id);
+      const row = byInsumo.get(key) || {nome: ins ? ins.nome : 'Insumo removido', categoria: ins?.categoria || 'Sem categoria', un: ins ? unitLabel(ins.unidade_compra) : '', qtd: 0, gasto: 0, vezes: 0};
+      row.qtd += num(it.quantidade); row.gasto += itemTotal(it); row.vezes += 1;
+      byInsumo.set(key, row);
+    });
+    const insumosMes = [...byInsumo.values()];
+    const maisComprado = [...insumosMes].sort((a, b) => b.qtd - a.qtd || b.gasto - a.gasto)[0] || null;
+    const maiorGasto = [...insumosMes].sort((a, b) => b.gasto - a.gasto)[0] || null;
+
+    const byCat = new Map();
+    insumosMes.forEach(r => byCat.set(r.categoria, (byCat.get(r.categoria) || 0) + r.gasto));
+    const categorias = [...byCat.entries()].map(([nome, gasto]) => ({nome, gasto})).sort((a, b) => b.gasto - a.gasto);
+
+    const bySup = new Map();
+    comprasMes.forEach(c => { const k = (c.fornecedor || '').trim() || 'Sem fornecedor'; const r = bySup.get(k) || {nome: k, gasto: 0, compras: 0}; r.gasto += num(c.total); r.compras += 1; bySup.set(k, r); });
+    const fornecedores = [...bySup.values()].sort((a, b) => b.gasto - a.gasto);
+
+    const serie = []; for (let k = 5; k >= 0; k--) { const ym = monthShift(month, -k); serie.push({ym, total: spend(state.compras.filter(c => monthOf(c) === ym))}); }
+
+    const variacoes = state.insumos.map(i => ({nome: i.nome, c: priceChange(i), preco: num(i.preco_compra)})).filter(x => x.c !== null && x.c !== 0);
+    const altas = variacoes.filter(x => x.c > 0).sort((a, b) => b.c - a.c).slice(0, 4);
+    const quedas = variacoes.filter(x => x.c < 0).sort((a, b) => a.c - b.c).slice(0, 3);
+
+    const hoje = todayStr();
+    const parados = state.insumos.map(i => ({nome: i.nome, ult: lastPurchaseDate(i.id)})).map(x => ({...x, dias: x.ult ? Math.floor((new Date(`${hoje}T12:00:00`) - new Date(`${x.ult.slice(0, 10)}T12:00:00`)) / 86400000) : null}))
+      .filter(x => x.dias === null || x.dias >= 30).sort((a, b) => (b.dias ?? 9999) - (a.dias ?? 9999)).slice(0, 5);
+
+    const recentes = [...state.compras].sort((a, b) => String(b.data_compra).localeCompare(String(a.data_compra))).slice(0, 5);
+    return {comprasMes, total, prevTotal, insumosMes, maisComprado, maiorGasto, categorias, fornecedores, serie, altas, quedas, parados, recentes, itensMes: itens.length};
+  }
+
+  function barRows(rows, valueKey, labelKey, fmt, sub) {
+    const max = Math.max(...rows.map(r => r[valueKey]), 0) || 1;
+    return rows.map(r => `<div class="dash-bar-row"><div class="dash-bar-top"><span class="dash-bar-name">${esc(r[labelKey])}</span><strong>${fmt(r[valueKey])}</strong></div><div class="dash-bar"><i style="width:${Math.max(3, r[valueKey] / max * 100)}%"></i></div>${sub ? `<small>${sub(r)}</small>` : ''}</div>`).join('');
+  }
+  const dashEmpty = (msg) => `<div class="dash-empty">${msg}</div>`;
+
+  function renderDashboard() {
+    const month = state.dashMes;
+    const d = dashboardData(month);
+    const diff = d.prevTotal > 0 ? d.total / d.prevTotal - 1 : null;
+    const diffHtml = diff === null
+      ? `<span class="muted">${d.prevTotal === 0 && d.total > 0 ? 'Sem compras no mês anterior' : 'Sem comparação'}</span>`
+      : `<span class="pl ${diff > 0 ? 'up' : 'down'}" style="margin:0">${diff > 0 ? '▲' : '▼'} ${Math.abs(diff * 100).toFixed(1).replace('.', ',')}%</span> <span class="muted">vs ${monthLabel(monthShift(month, -1))}</span>`;
+    const ticket = d.comprasMes.length ? d.total / d.comprasMes.length : 0;
+    const topFornecedor = d.fornecedores[0];
+    const serieMax = Math.max(...d.serie.map(x => x.total), 0) || 1;
+
+    $('view-dashboard').innerHTML = `
+      <div class="page-intro"><div><span class="eyebrow">VISÃO GERAL</span><h3>Dashboard</h3><p>Resumo dos gastos com insumos em <strong>${esc(monthLong(month))}</strong>.</p></div>
+        <div class="actions"><input class="input" type="month" id="dash-month" value="${month}" aria-label="Mês do dashboard" style="width:auto"><button class="glass-btn primary" type="button" onclick="window.gestao.openPurchase()"><i class="fa-solid fa-plus"></i> Registrar compra</button></div></div>
+      <div class="dash-kpis">
+        <div class="dash-kpi gold"><span class="dash-kpi-label">Total gasto no mês</span><div class="dash-kpi-main"><span class="dash-ico"><i class="fa-solid fa-wallet"></i></span><strong class="money">${money(d.total)}</strong></div><div class="dash-kpi-foot">${diffHtml}</div></div>
+        <div class="dash-kpi"><span class="dash-kpi-label">Compras no mês</span><div class="dash-kpi-main"><span class="dash-ico"><i class="fa-solid fa-basket-shopping"></i></span><strong>${d.comprasMes.length}</strong></div><div class="dash-kpi-foot muted">Ticket médio ${money(ticket)}</div></div>
+        <div class="dash-kpi"><span class="dash-kpi-label">Insumo mais comprado</span><div class="dash-kpi-main"><span class="dash-ico"><i class="fa-solid fa-ranking-star"></i></span><strong class="txt">${d.maisComprado ? esc(d.maisComprado.nome) : '—'}</strong></div><div class="dash-kpi-foot muted">${d.maisComprado ? `${fmtQty(d.maisComprado.qtd)} embalagem(ns) · ${d.maisComprado.vezes} compra(s)` : 'Sem compras no mês'}</div></div>
+        <div class="dash-kpi"><span class="dash-kpi-label">Maior gasto em um insumo</span><div class="dash-kpi-main"><span class="dash-ico"><i class="fa-solid fa-fire"></i></span><strong class="txt">${d.maiorGasto ? esc(d.maiorGasto.nome) : '—'}</strong></div><div class="dash-kpi-foot muted">${d.maiorGasto ? `${money(d.maiorGasto.gasto)} (${d.total ? Math.round(d.maiorGasto.gasto / d.total * 100) : 0}% do mês)` : 'Sem compras no mês'}</div></div>
+        <div class="dash-kpi"><span class="dash-kpi-label">Fornecedor principal</span><div class="dash-kpi-main"><span class="dash-ico"><i class="fa-solid fa-truck"></i></span><strong class="txt">${topFornecedor ? esc(topFornecedor.nome) : '—'}</strong></div><div class="dash-kpi-foot muted">${topFornecedor ? `${money(topFornecedor.gasto)} em ${topFornecedor.compras} compra(s)` : 'Sem compras no mês'}</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-chart-column"></i> Gasto nos últimos 6 meses</h4><p>Total comprado por mês.</p></div></div>
+          <div class="dash-columns" role="img" aria-label="Gasto mensal dos últimos 6 meses">${d.serie.map(x => `<div class="dash-col${x.ym === month ? ' current' : ''}"><span class="dash-col-val">${x.total ? money(x.total).replace(/ /g, ' ') : '—'}</span><div class="dash-col-bar"><i style="height:${x.total ? Math.max(4, x.total / serieMax * 100) : 0}%"></i></div><span class="dash-col-label">${monthLabel(x.ym)}</span></div>`).join('')}</div></div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-trophy"></i> Insumos que mais pesaram</h4><p>Maior gasto no mês.</p></div></div>
+          ${d.insumosMes.length ? barRows([...d.insumosMes].sort((a, b) => b.gasto - a.gasto).slice(0, 5), 'gasto', 'nome', money, r => `${fmtQty(r.qtd)} embalagem(ns) · ${r.vezes} compra(s)`) : dashEmpty('Nenhuma compra neste mês.')}</div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-tags"></i> Gasto por categoria</h4><p>Onde o dinheiro foi no mês.</p></div></div>
+          ${d.categorias.length ? barRows(d.categorias.slice(0, 6), 'gasto', 'nome', money, r => `${d.total ? Math.round(r.gasto / d.total * 100) : 0}% do total`) : dashEmpty('Sem dados de categoria neste mês.')}</div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-arrow-trend-up"></i> Variação de preços</h4><p>Última alteração no preço de cada insumo.</p></div></div>
+          ${d.altas.length || d.quedas.length ? `<div class="dash-list">${[...d.altas, ...d.quedas].map(x => `<div class="dash-li"><span>${esc(x.nome)}<small>${money4(x.preco)} por embalagem</small></span><span class="pl ${x.c > 0 ? 'up' : 'down'}" style="margin:0">${x.c > 0 ? '▲' : '▼'} ${Math.abs(x.c * 100).toFixed(1).replace('.', ',')}%</span></div>`).join('')}</div>` : dashEmpty('Nenhuma variação de preço registrada ainda.')}</div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-bell"></i> Hora de repor?</h4><p>Insumos sem compra há 30 dias ou mais.</p></div></div>
+          ${d.parados.length ? `<div class="dash-list">${d.parados.map(x => `<div class="dash-li"><span>${esc(x.nome)}<small>${x.ult ? `Última compra em ${fmtDate(x.ult)}` : 'Nunca comprado'}</small></span><span class="tag">${x.dias === null ? 'sem compras' : `${x.dias} dias`}</span></div>`).join('')}</div>` : dashEmpty('Tudo em dia: todos os insumos foram comprados nos últimos 30 dias.')}</div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-clock-rotate-left"></i> Últimas compras</h4><p>As 5 mais recentes.</p></div><button class="glass-btn mini" type="button" onclick="window.gestao.navigate('compras')">Ver todas</button></div>
+          ${d.recentes.length ? `<div class="dash-list">${d.recentes.map(c => `<button type="button" class="dash-li dash-li-btn" onclick="window.gestao.viewPurchase('${c.id}')"><span>${esc(c.fornecedor || 'Sem fornecedor')}<small>${fmtDate(c.data_compra)}</small></span><strong class="money">${money(c.total)}</strong></button>`).join('')}</div>` : dashEmpty('Nenhuma compra registrada ainda.')}</div>
+      </div>`;
+    $('dash-month').onchange = e => { state.dashMes = e.target.value || currentMonth(); renderDashboard(); };
+  }
+
   function insumoRowHtml(i) {
     const hasAp = Array.isArray(i.aproveitamentos) && i.aproveitamentos.length > 0;
     const extra = [i.categoria, i.fornecedor].filter(Boolean).map(esc).join(' · ');
@@ -447,10 +543,10 @@
       $('access-screen').classList.add('hidden');
       $('app').classList.remove('hidden');
       await loadAll();
-      navigate('insumos');
+      navigate('dashboard');
     } catch (e) {
       console.error('Erro ao carregar a Gestão:', e);
-      if (!$('app').classList.contains('hidden')) $('view-insumos').innerHTML = `<div class="panel empty"><i class="fa-solid fa-database"></i><div>${esc(e.message)}</div></div>`;
+      if (!$('app').classList.contains('hidden')) $('view-dashboard').innerHTML = `<div class="panel empty"><i class="fa-solid fa-database"></i><div>${esc(e.message)}</div></div>`;
       else showAccessError(e.message);
     }
   }

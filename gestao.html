@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/gestao.css?v=20261010-3">
-  <link rel="stylesheet" href="css/painel-vinho.css?v=20261020-1">
+  <link rel="stylesheet" href="css/painel-vinho.css?v=20261021-5">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -48,7 +48,8 @@
         <div><strong>Dois Amores</strong><small>Gestão</small></div>
       </div>
       <nav>
-        <button class="side-link active" data-view="insumos"><i class="fa-solid fa-box-open"></i><span>Insumos</span></button>
+        <button class="side-link active" data-view="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button>
+        <button class="side-link" data-view="insumos"><i class="fa-solid fa-box-open"></i><span>Insumos</span></button>
         <button class="side-link" data-view="compras"><i class="fa-solid fa-basket-shopping"></i><span>Compras</span></button>
       </nav>
       <div class="sidebar-bottom">
@@ -60,8 +61,8 @@
       <header class="topbar">
         <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button>
         <div>
-          <span class="eyebrow" id="view-eyebrow">CADASTRO</span>
-          <h2 id="view-title">Insumos</h2>
+          <span class="eyebrow" id="view-eyebrow">VISÃO GERAL</span>
+          <h2 id="view-title">Dashboard</h2>
         </div>
         <div class="topbar-actions">
           <span class="status-pill"><span></span> Sistema ativo</span>
@@ -70,7 +71,8 @@
       </header>
 
       <div id="toast" class="toast"></div>
-      <section id="view-insumos" class="view active"></section>
+      <section id="view-dashboard" class="view active"></section>
+      <section id="view-insumos" class="view"></section>
       <section id="view-compras" class="view"></section>
     </main>
   </div>
@@ -86,6 +88,6 @@
   </div>
 
   <script src="js/00-supabase.js"></script>
-  <script src="js/gestao.js?v=20261020-1"></script>
+  <script src="js/gestao.js?v=20261021-5"></script>
 </body>
 </html>
