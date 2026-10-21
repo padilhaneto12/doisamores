@@ -884,10 +884,3 @@ select.cart-input,select.admin-input-txt{
 }
 @media(prefers-reduced-motion:reduce){.nv-card{transition:none}}
 
-/* ===== Avaliações em seção própria + "Sobre" centralizado ===== */
-.about-grid.about-solo{grid-template-columns:minmax(0,760px);justify-content:center;text-align:center}
-.about-solo .about-list{justify-items:center}
-.about-solo .about-list li{text-align:left}
-.avaliacoes-card{max-width:820px;margin:0 auto;padding:40px 44px}
-.avaliacoes-card .review-text{font-size:1.12rem;line-height:1.7;min-height:130px}
-@media(max-width:600px){.avaliacoes-card{padding:28px 22px}}
