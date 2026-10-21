@@ -291,40 +291,127 @@
     await carregarCardapioNuvem();
   }
 
+  /* ---------- Carrossel de Novidades (estilo coverflow) ---------- */
+  let novidadesIdx = 0;
+  let novidadesTimer = null;
+  let novidadesTotal = 0;
+  const NOVIDADES_INTERVALO_MS = 4500;
+
+  function novidadesOffset(i) {
+    const n = novidadesTotal;
+    const meio = Math.floor(n / 2);
+    return ((i - novidadesIdx + n + meio) % n) - meio;
+  }
+
+  function novidadesAtualizar() {
+    const stage = $('novidades-grid');
+    if (!stage) return;
+    stage.querySelectorAll('.nv-card').forEach((card, i) => {
+      const o = novidadesOffset(i);
+      card.dataset.o = String(o);
+      card.setAttribute('aria-hidden', o === 0 ? 'false' : 'true');
+      card.querySelectorAll('button').forEach(b => { b.tabIndex = o === 0 ? 0 : -1; });
+    });
+    stage.querySelectorAll('.nv-dot').forEach((d, i) => {
+      const ativo = i === novidadesIdx;
+      d.classList.toggle('ativo', ativo);
+      d.setAttribute('aria-current', ativo ? 'true' : 'false');
+    });
+  }
+
+  function novidadesIr(destino) {
+    if (novidadesTotal < 2) return;
+    novidadesIdx = ((destino % novidadesTotal) + novidadesTotal) % novidadesTotal;
+    novidadesAtualizar();
+  }
+
+  function novidadesParar() { clearInterval(novidadesTimer); novidadesTimer = null; }
+  function novidadesIniciar() {
+    novidadesParar();
+    if (novidadesTotal < 2) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    novidadesTimer = setInterval(() => { if (!document.hidden) novidadesIr(novidadesIdx + 1); }, NOVIDADES_INTERVALO_MS);
+  }
+
+  function novidadesLigarEventos(root) {
+    const stage = root.querySelector('.nv-stage');
+    root.querySelector('.nv-prev')?.addEventListener('click', () => { novidadesIr(novidadesIdx - 1); novidadesIniciar(); });
+    root.querySelector('.nv-next')?.addEventListener('click', () => { novidadesIr(novidadesIdx + 1); novidadesIniciar(); });
+    root.querySelectorAll('.nv-dot').forEach((d, i) => d.addEventListener('click', () => { novidadesIr(i); novidadesIniciar(); }));
+
+    let inicioX = null, arrastou = false;
+    stage.addEventListener('pointerdown', e => { inicioX = e.clientX; arrastou = false; });
+    stage.addEventListener('pointerup', e => {
+      if (inicioX === null) return;
+      const dx = e.clientX - inicioX; inicioX = null;
+      if (Math.abs(dx) > 45) { arrastou = true; novidadesIr(novidadesIdx + (dx < 0 ? 1 : -1)); novidadesIniciar(); }
+    });
+    stage.addEventListener('pointercancel', () => { inicioX = null; });
+    stage.addEventListener('click', e => {
+      if (arrastou) { arrastou = false; return; }
+      if (e.target.closest('.nv-order')) return;
+      const card = e.target.closest('.nv-card');
+      if (!card) return;
+      const o = Number(card.dataset.o);
+      if (o !== 0) { novidadesIr(novidadesIdx + o); novidadesIniciar(); }
+    });
+    root.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') { novidadesIr(novidadesIdx - 1); novidadesIniciar(); }
+      if (e.key === 'ArrowRight') { novidadesIr(novidadesIdx + 1); novidadesIniciar(); }
+    });
+    root.addEventListener('mouseenter', novidadesParar);
+    root.addEventListener('mouseleave', novidadesIniciar);
+    root.addEventListener('focusin', novidadesParar);
+    root.addEventListener('focusout', novidadesIniciar);
+    root.addEventListener('touchstart', novidadesParar, {passive: true});
+    root.addEventListener('touchend', novidadesIniciar, {passive: true});
+  }
+
   function renderizarNovidades() {
     const grid = $('novidades-grid');
     if (!grid) return;
-    grid.innerHTML = '';
+    novidadesParar();
     const itensNovidades = produtosCardapio.filter(p => p.eh_novidade);
 
     if (itensNovidades.length === 0) {
+      grid.innerHTML = '';
       $('novidades').style.display = 'none';
       return;
-    } else {
-      $('novidades').style.display = 'block';
     }
+    $('novidades').style.display = 'block';
 
-    itensNovidades.forEach(prod => {
+    novidadesTotal = itensNovidades.length;
+    if (novidadesIdx >= novidadesTotal) novidadesIdx = 0;
+
+    const cards = itensNovidades.map(prod => {
       const estoqueRestante = prod.limite - prod.vendidos;
       const esgotado = estoqueRestante <= 0;
       const priceFormatted = prod.id === 'caixa_mista' ? 'R$ 55 ou R$ 65' : prod.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-      grid.innerHTML += `
-        <div class="item-card ${esgotado ? 'esgotado-card' : ''}">
+      return `
+        <article class="nv-card ${esgotado ? 'esgotado-card' : ''}" data-o="9">
+          <img class="nv-img" src="${prod.image}" alt="${prod.name}" loading="lazy" draggable="false">
           <span class="tag-novidade">Novidade</span>
-          <div>
-            <div class="item-photo"><img src="${prod.image}" alt="${prod.name}"></div>
+          <div class="nv-info">
             <h3>${prod.name}</h3>
-          </div>
-          <div>
             <div class="item-price">${priceFormatted}</div>
-            <button class="item-order" onclick="addToCart('${prod.id}')" ${esgotado ? 'disabled' : ''}>
+            <button class="nv-order" type="button" onclick="addToCart('${prod.id}')" ${esgotado ? 'disabled' : ''}>
               ${esgotado ? 'Esgotado' : (prod.id === 'caixa_mista' ? 'Montar Caixa +' : 'Adicionar ao carrinho +')}
             </button>
           </div>
-        </div>
-      `;
-    });
+        </article>`;
+    }).join('');
+
+    const multiplos = novidadesTotal > 1;
+    grid.innerHTML = `
+      <div class="nv-stage" tabindex="0" role="group" aria-roledescription="carrossel" aria-label="Novidades do Festival">${cards}</div>
+      ${multiplos ? `
+      <button class="nv-arrow nv-prev" type="button" aria-label="Novidade anterior"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="nv-arrow nv-next" type="button" aria-label="Próxima novidade"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="nv-dots">${itensNovidades.map((p, i) => `<button class="nv-dot" type="button" aria-label="Ir para ${p.name}"></button>`).join('')}</div>` : ''}`;
+
+    novidadesLigarEventos(grid);
+    novidadesAtualizar();
+    novidadesIniciar();
   }
 
   function renderizarMenuCategorizado() {
