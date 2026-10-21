@@ -884,3 +884,13 @@ select.cart-input,select.admin-input-txt{
 }
 @media(prefers-reduced-motion:reduce){.nv-card{transition:none}}
 
+
+/* ===== Rodapé simples ===== */
+footer.footer-simples{padding:30px 0 22px}
+.footer-credito{margin:0;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;text-align:center;font-size:.88rem;color:rgba(247,234,217,.7)}
+.footer-credito a:not(.footer-insta){color:var(--ouro);font-weight:600;text-decoration:none}
+.footer-credito a:not(.footer-insta):hover{text-decoration:underline}
+.footer-insta{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;color:var(--ouro);font-size:1.05rem;text-decoration:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.16);transition:background .2s,transform .2s,border-color .2s}
+.footer-insta:hover{background:linear-gradient(145deg,rgba(243,168,59,.4),rgba(176,108,40,.3));border-color:rgba(243,168,59,.7);color:#fff;transform:translateY(-2px)}
+.footer-restrita{margin-top:12px;text-align:center}
