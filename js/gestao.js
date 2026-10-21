@@ -189,7 +189,23 @@
 
     const serie = []; for (let k = 5; k >= 0; k--) { const ym = monthShift(month, -k); serie.push({ym, total: spend(state.compras.filter(c => monthOf(c) === ym))}); }
 
-    const variacoes = state.insumos.map(i => ({nome: i.nome, c: priceChange(i), preco: num(i.preco_compra)})).filter(x => x.c !== null && x.c !== 0);
+    // Variação de preço calculada pelas compras: última compra de cada insumo contra a anterior.
+    const hist = new Map();
+    state.itensCompras.forEach(it => {
+      const c = compraById.get(it.compra_id); if (!c) return;
+      const preco = num(it.preco_unitario); if (preco <= 0) return;
+      const arr = hist.get(String(it.insumo_id)) || []; arr.push({data: String(c.data_compra || ''), preco, fornecedor: (c.fornecedor || '').trim()}); hist.set(String(it.insumo_id), arr);
+    });
+    const variacoes = [];
+    hist.forEach((arr, id) => {
+      arr.sort((a, b) => a.data.localeCompare(b.data));
+      if (arr.length < 2) return;
+      const ultima = arr[arr.length - 1], anterior = arr[arr.length - 2];
+      const c = ultima.preco / anterior.preco - 1;
+      if (Math.abs(c) < 0.0005) return;
+      const menor = arr.reduce((m, x) => x.preco < m.preco ? x : m, arr[0]);
+      variacoes.push({nome: findInsumo(id)?.nome || 'Insumo removido', c, ultima, anterior, menor: menor.preco < ultima.preco ? menor : null});
+    });
     const altas = variacoes.filter(x => x.c > 0).sort((a, b) => b.c - a.c).slice(0, 4);
     const quedas = variacoes.filter(x => x.c < 0).sort((a, b) => a.c - b.c).slice(0, 3);
 
@@ -235,8 +251,8 @@
           ${d.insumosMes.length ? barRows([...d.insumosMes].sort((a, b) => b.gasto - a.gasto).slice(0, 5), 'gasto', 'nome', money, r => `${fmtQty(r.qtd)} embalagem(ns) · ${r.vezes} compra(s)`) : dashEmpty('Nenhuma compra neste mês.')}</div>
         <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-tags"></i> Gasto por categoria</h4><p>Onde o dinheiro foi no mês.</p></div></div>
           ${d.categorias.length ? barRows(d.categorias.slice(0, 6), 'gasto', 'nome', money, r => `${d.total ? Math.round(r.gasto / d.total * 100) : 0}% do total`) : dashEmpty('Sem dados de categoria neste mês.')}</div>
-        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-arrow-trend-up"></i> Variação de preços</h4><p>Última alteração no preço de cada insumo.</p></div></div>
-          ${d.altas.length || d.quedas.length ? `<div class="dash-list">${[...d.altas, ...d.quedas].map(x => `<div class="dash-li"><span>${esc(x.nome)}<small>${money4(x.preco)} por embalagem</small></span><span class="pl ${x.c > 0 ? 'up' : 'down'}" style="margin:0">${x.c > 0 ? '▲' : '▼'} ${Math.abs(x.c * 100).toFixed(1).replace('.', ',')}%</span></div>`).join('')}</div>` : dashEmpty('Nenhuma variação de preço registrada ainda.')}</div>
+        <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-arrow-trend-up"></i> Variação de preços</h4><p>Última compra de cada insumo comparada com a anterior.</p></div></div>
+          ${d.altas.length || d.quedas.length ? `<div class="dash-list">${[...d.altas, ...d.quedas].map(x => `<div class="dash-li"><span>${esc(x.nome)}<small>${money4(x.ultima.preco)}${x.ultima.fornecedor ? ` (${esc(x.ultima.fornecedor)})` : ''} · antes ${money4(x.anterior.preco)}${x.anterior.fornecedor ? ` (${esc(x.anterior.fornecedor)})` : ''}</small>${x.menor ? `<small class="dash-best">Menor preço já pago: ${money4(x.menor.preco)}${x.menor.fornecedor ? ` (${esc(x.menor.fornecedor)})` : ''}</small>` : ''}</span><span class="pl ${x.c > 0 ? 'up' : 'down'}" style="margin:0">${x.c > 0 ? '▲' : '▼'} ${Math.abs(x.c * 100).toFixed(1).replace('.', ',')}%</span></div>`).join('')}</div>` : dashEmpty('Ainda não há duas compras do mesmo insumo para comparar.')}</div>
         <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-bell"></i> Hora de repor?</h4><p>Insumos sem compra há 30 dias ou mais.</p></div></div>
           ${d.parados.length ? `<div class="dash-list">${d.parados.map(x => `<div class="dash-li"><span>${esc(x.nome)}<small>${x.ult ? `Última compra em ${fmtDate(x.ult)}` : 'Nunca comprado'}</small></span><span class="tag">${x.dias === null ? 'sem compras' : `${x.dias} dias`}</span></div>`).join('')}</div>` : dashEmpty('Tudo em dia: todos os insumos foram comprados nos últimos 30 dias.')}</div>
         <div class="panel"><div class="panel-head"><div><h4><i class="fa-solid fa-clock-rotate-left"></i> Últimas compras</h4><p>As 5 mais recentes.</p></div><button class="glass-btn mini" type="button" onclick="window.gestao.navigate('compras')">Ver todas</button></div>
