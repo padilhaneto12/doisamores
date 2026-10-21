@@ -15,7 +15,7 @@
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0; background:var(--carvao); color:var(--creme);
+    margin:0; background:var(--carvao) url('../images/svg/textura-fundo.svg') center top / cover fixed no-repeat; color:var(--creme);
     font-family:'Manrope', sans-serif; font-size:16px; line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }

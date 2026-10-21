@@ -281,7 +281,7 @@
     const total = purchases.reduce((s, c) => s + num(c.total), 0);
     $('view-compras').innerHTML = `<div class="page-intro"><div><span class="eyebrow">CONTROLE DE COMPRAS</span><h3>Compras</h3><p>Registre as compras de insumos. O preço de referência de cada insumo é atualizado automaticamente.</p></div><div class="actions"><label class="check"><input type="checkbox" id="purchase-all" ${all ? 'checked' : ''}> Todos os meses</label><input class="input" type="month" id="purchase-month" value="${month}" ${all ? 'disabled' : ''} style="width:auto"><button class="glass-btn primary" type="button" onclick="window.gestao.openPurchase()"><i class="fa-solid fa-plus"></i> Registrar compra</button></div></div>
       <div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="stat"><div class="label">${all ? 'Total geral' : 'Total do mês'}</div><div class="value money">${money(total)}</div></div><div class="stat"><div class="label">Quantidade de compras</div><div class="value">${purchases.length}</div></div></div>
-      <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Data</th><th>Fornecedor</th><th>Itens</th><th>Observação</th><th>Total</th><th></th></tr></thead><tbody>${purchases.length ? purchases.map(c => { const its = state.itensCompras.filter(i => i.compra_id === c.id); return `<tr><td>${fmtDate(c.data_compra)}</td><td>${esc(c.fornecedor || '—')}</td><td><button class="glass-btn mini" type="button" onclick="window.gestao.viewPurchase('${c.id}')">${its.length} item(ns)</button></td><td>${esc(c.observacao || '—')}</td><td class="money"><strong>${money(c.total)}</strong></td><td><button class="icon-btn" type="button" aria-label="Excluir compra" onclick="window.gestao.deletePurchase('${c.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join('') : '<tr><td colspan="6"><div class="empty">Nenhuma compra neste período.</div></td></tr>'}</tbody></table></div></div>`;
+      <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Data</th><th>Fornecedor</th><th>Itens</th><th>Observação</th><th>Total</th><th></th></tr></thead><tbody>${purchases.length ? purchases.map(c => { const its = state.itensCompras.filter(i => i.compra_id === c.id); return `<tr><td>${fmtDate(c.data_compra)}</td><td>${esc(c.fornecedor || '—')}</td><td><button class="glass-btn mini" type="button" onclick="window.gestao.viewPurchase('${c.id}')">${its.length} item(ns)</button></td><td>${esc(c.observacao || '—')}</td><td class="money"><strong>${money(c.total)}</strong></td><td><button class="icon-btn" type="button" aria-label="Editar compra" title="Editar compra" onclick="window.gestao.editPurchase('${c.id}')"><i class="fa-solid fa-pen"></i></button><button class="icon-btn" type="button" aria-label="Excluir compra" onclick="window.gestao.deletePurchase('${c.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join('') : '<tr><td colspan="6"><div class="empty">Nenhuma compra neste período.</div></td></tr>'}</tbody></table></div></div>`;
     $('purchase-month').onchange = e => { state.compraMes = e.target.value || currentMonth(); renderCompras(); };
     $('purchase-all').onchange = e => { state.compraTodos = e.target.checked; renderCompras(); };
   }
@@ -289,43 +289,57 @@
   function insumoOptionsHtml(selected) {
     return state.insumos.map(i => `<option value="${i.id}" ${String(i.id) === String(selected) ? 'selected' : ''}>${esc(i.nome)} (${num(i.quantidade_embalagem)} ${unitLabel(i.unidade_compra)})</option>`).join('');
   }
-  function purchaseForm() {
-    return `<div class="form-grid"><div class="field"><label>Data *</label><input class="input" id="p-date" type="date" value="${todayStr()}"></div><div class="field"><label>Fornecedor</label><input class="input" id="p-supplier" list="dl-fornecedores" autocomplete="off"></div><div class="field full"><label>Observação</label><input class="input" id="p-note" placeholder="Ex.: compra semanal"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 10px"><div><strong>Itens da compra</strong><div class="muted small">O preço vem do cadastro do insumo; informe apenas a quantidade.</div></div><div class="actions"><button class="glass-btn mini" type="button" id="toggle-inline-ins"><i class="fa-solid fa-plus"></i> Novo insumo</button><button class="glass-btn" type="button" id="add-purchase-row"><i class="fa-solid fa-plus"></i> Adicionar item</button></div></div>
+  function purchaseForm(purchase) {
+    return `<div class="form-grid"><div class="field"><label>Data *</label><input class="input" id="p-date" type="date" value="${esc(purchase?.data_compra || todayStr())}"></div><div class="field"><label>Fornecedor</label><input class="input" id="p-supplier" list="dl-fornecedores" autocomplete="off" value="${esc(purchase?.fornecedor || '')}"></div><div class="field full"><label>Observação</label><input class="input" id="p-note" placeholder="Ex.: compra semanal" value="${esc(purchase?.observacao || '')}"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 10px"><div><strong>Itens da compra</strong><div class="muted small">O preço do cadastro é sugerido; ajuste para informar o valor pago nesta compra.</div></div><div class="actions"><button class="glass-btn mini" type="button" id="toggle-inline-ins"><i class="fa-solid fa-plus"></i> Novo insumo</button><button class="glass-btn" type="button" id="add-purchase-row"><i class="fa-solid fa-plus"></i> Adicionar item</button></div></div>
       <div class="inline-new" id="inline-ins" hidden><h4>Novo insumo</h4><div class="form-grid"><div class="field full"><label>Nome</label><input class="input" id="ni-name" placeholder="Ex.: Chocolate ao leite"></div><div class="field"><label>Quantidade da embalagem</label><input class="input" id="ni-pack" type="number" inputmode="decimal" step="any" min="0" placeholder="Ex.: 500"></div><div class="field"><label>Unidade</label><select class="select" id="ni-unit">${unitOptionsHtml('g')}</select></div><div class="field full"><label>Preço pago na embalagem (R$)</label><input class="input" id="ni-price" type="number" inputmode="decimal" step="any" min="0" placeholder="Ex.: 12,50"></div></div><div class="modal-actions"><button class="glass-btn" type="button" id="cancel-inline-ins">Cancelar</button><button class="glass-btn primary" type="button" id="save-inline-ins" style="width:auto">Criar e adicionar</button></div></div>
       <div id="purchase-rows" class="purchase-items"></div><div class="cost-line total"><span>Total da compra</span><strong class="money" id="p-total-line">R$ 0,00</strong></div>${datalists()}
       <div class="modal-actions"><button class="glass-btn" type="button" data-close-modal>Cancelar</button><button class="glass-btn primary" type="button" id="save-purchase" style="width:auto">Salvar compra</button></div>`;
   }
   function addPurchaseRow(item = {}) {
     const wrap = $('purchase-rows'); const row = document.createElement('div'); row.className = 'purchase-row';
-    row.innerHTML = `<div class="field"><label>Insumo</label><select class="select p-insumo">${insumoOptionsHtml(item.insumo_id)}</select></div><div class="field"><label>Qtd.</label><input class="input p-qty" type="number" step="0.001" min="0" value="${item.quantidade !== undefined ? num(item.quantidade) : 1}"></div><div class="field"><label>Preço/emb. (R$)</label><input class="input p-price" type="number" step="0.01" value="0.00" readonly aria-label="Preço por embalagem do insumo"></div><div class="field"><label>Total (R$)</label><input class="input p-total" type="number" step="0.01" value="0.00" readonly aria-label="Total calculado do item"></div><button type="button" class="remove-row" title="Remover" aria-label="Remover item"><i class="fa-solid fa-xmark"></i></button>`;
+    row.dataset.itemId = item.id || '';
+    row.innerHTML = `<div class="field"><label>Insumo</label><select class="select p-insumo">${insumoOptionsHtml(item.insumo_id)}</select></div><div class="field"><label>Qtd.</label><input class="input p-qty" type="number" step="0.001" min="0" value="${item.quantidade !== undefined ? num(item.quantidade) : 1}"></div><div class="field"><label>Preço/emb. (R$)</label><input class="input p-price" type="number" step="0.0001" min="0" value="0.00" aria-label="Preço pago por embalagem"></div><div class="field"><label>Total (R$)</label><input class="input p-total" type="number" step="0.01" value="0.00" readonly aria-label="Total calculado do item"></div><button type="button" class="remove-row" title="Remover" aria-label="Remover item"><i class="fa-solid fa-xmark"></i></button>`;
     row.querySelector('.remove-row').onclick = () => { row.remove(); updatePurchaseTotal(); };
-    wrap.appendChild(row); updatePurchaseRow(row); return row;
+    wrap.appendChild(row);
+    if (item.preco_unitario !== undefined) row.querySelector('.p-price').value = String(num(item.preco_unitario));
+    updatePurchaseRow(row, item.preco_unitario === undefined); return row;
   }
-  function updatePurchaseRow(row) {
+  function updatePurchaseRow(row, resetPrice = false) {
     const insumo = findInsumo(row.querySelector('.p-insumo').value);
-    const preco = insumo ? num(insumo.preco_compra) : 0;
+    const priceInput = row.querySelector('.p-price');
+    if (resetPrice) priceInput.value = insumo ? num(insumo.preco_compra).toFixed(2) : '0.00';
+    const preco = num(priceInput.value);
     const quantidade = num(row.querySelector('.p-qty').value);
-    row.querySelector('.p-price').value = preco.toFixed(2);
     row.querySelector('.p-total').value = (Math.round(quantidade * preco * 100) / 100).toFixed(2);
   }
   function updatePurchaseTotal() { const el = $('p-total-line'); if (!el) return; el.textContent = money([...document.querySelectorAll('.purchase-row .p-total')].reduce((s, i) => s + num(i.value), 0)); }
   function openPurchase() {
-    openModal('Registrar compra', purchaseForm(), 'COMPRAS');
-    if (state.insumos.length) addPurchaseRow(); else { $('inline-ins').hidden = false; }
+    openPurchaseForm(null);
+  }
+  function editPurchase(id) {
+    const purchase = state.compras.find(c => c.id === id);
+    if (!purchase) { toast('Compra não encontrada.', 'error'); return; }
+    openPurchaseForm(purchase);
+  }
+  function openPurchaseForm(purchase) {
+    const items = purchase ? state.itensCompras.filter(i => i.compra_id === purchase.id) : [];
+    openModal(purchase ? 'Editar compra' : 'Registrar compra', purchaseForm(purchase), 'COMPRAS');
+    if (purchase) items.forEach(addPurchaseRow);
+    else if (state.insumos.length) addPurchaseRow(); else { $('inline-ins').hidden = false; }
     $('add-purchase-row').onclick = () => { if (!state.insumos.length) { toast('Crie um insumo primeiro.', 'error'); $('inline-ins').hidden = false; return; } addPurchaseRow(); };
     $('purchase-rows').addEventListener('input', event => {
-      if (event.target.matches('.p-qty')) updatePurchaseRow(event.target.closest('.purchase-row'));
+      if (event.target.matches('.p-qty, .p-price')) updatePurchaseRow(event.target.closest('.purchase-row'));
       updatePurchaseTotal();
     });
     $('purchase-rows').addEventListener('change', event => {
-      if (event.target.matches('.p-insumo')) updatePurchaseRow(event.target.closest('.purchase-row'));
+      if (event.target.matches('.p-insumo')) updatePurchaseRow(event.target.closest('.purchase-row'), true);
       updatePurchaseTotal();
     });
     $('toggle-inline-ins').onclick = () => { $('inline-ins').hidden = !$('inline-ins').hidden; };
     $('cancel-inline-ins').onclick = () => { $('inline-ins').hidden = true; };
     $('save-inline-ins').onclick = saveInlineInsumo;
-    $('save-purchase').onclick = savePurchase;
+    $('save-purchase').onclick = () => savePurchase(purchase);
   }
   async function saveInlineInsumo() {
     const nome = $('ni-name').value.trim(), qtd = num($('ni-pack').value), preco = num($('ni-price').value);
@@ -338,22 +352,47 @@
     state.insumos = [...state.insumos, data].sort((a, b) => String(a.nome).localeCompare(String(b.nome), 'pt-BR'));
     document.querySelectorAll('.purchase-row .p-insumo').forEach(sel => { const v = sel.value; sel.innerHTML = insumoOptionsHtml(v); sel.value = v; });
     const empty = [...document.querySelectorAll('.purchase-row')].find(r => !r.querySelector('.p-insumo').value);
-    const row = empty || addPurchaseRow(); row.querySelector('.p-insumo').value = data.id; updatePurchaseRow(row);
+    const row = empty || addPurchaseRow(); row.querySelector('.p-insumo').value = data.id; updatePurchaseRow(row, true);
     ['ni-name', 'ni-pack', 'ni-price'].forEach(k => $(k).value = ''); $('inline-ins').hidden = true; updatePurchaseTotal();
     toast('Insumo criado e adicionado à compra.', 'success');
   }
-  async function savePurchase() {
+  async function savePurchase(purchase = null) {
     if (!$('p-date').value) { toast('Informe a data da compra.', 'error'); return; }
     const rows = [...document.querySelectorAll('.purchase-row')];
     if (!rows.length) { toast('Adicione pelo menos um item.', 'error'); return; }
+    if (rows.some(r => !r.querySelector('.p-price').value.trim())) { toast('Informe o preço por embalagem de cada item.', 'error'); return; }
     const items = rows.map(r => {
       const insumo_id = r.querySelector('.p-insumo').value, quantidade = num(r.querySelector('.p-qty').value);
-      const preco_unitario = num(findInsumo(insumo_id)?.preco_compra);
-      return {insumo_id, quantidade, preco_unitario, total: Math.round(quantidade * preco_unitario * 100) / 100};
+      const priceInput = r.querySelector('.p-price');
+      const preco_unitario = num(priceInput.value);
+      return {id: r.dataset.itemId || null, insumo_id, quantidade, preco_unitario, total: Math.round(quantidade * preco_unitario * 100) / 100};
     });
     if (items.some(i => !i.insumo_id || i.quantidade <= 0 || i.preco_unitario < 0)) { toast('Revise os itens da compra.', 'error'); return; }
     const btn = $('save-purchase'); btn.disabled = true;
     const purchaseDate = $('p-date').value; const total = items.reduce((s, i) => s + i.total, 0);
+    if (purchase) {
+      const updatedPurchase = {data_compra: purchaseDate, fornecedor: $('p-supplier').value.trim(), observacao: $('p-note').value.trim(), total};
+      const {error: ec} = await db.from(TABLES.COMPRAS).update(updatedPurchase).eq('id', purchase.id);
+      if (ec) { btn.disabled = false; toast(ec.message, 'error'); return; }
+      const payload = items.map(i => ({...(i.id ? {id: i.id} : {}), compra_id: purchase.id, insumo_id: i.insumo_id, quantidade: i.quantidade, unidade: findInsumo(i.insumo_id)?.unidade_compra || 'un', preco_unitario: i.preco_unitario, total: i.total}));
+      const {error: ei} = await db.from(TABLES.ITENS_COMPRAS).upsert(payload);
+      if (ei) {
+        const {error: rollbackError} = await db.from(TABLES.COMPRAS).update({data_compra: purchase.data_compra, fornecedor: purchase.fornecedor, observacao: purchase.observacao, total: purchase.total}).eq('id', purchase.id);
+        btn.disabled = false;
+        toast(rollbackError ? `${ei.message} Também não foi possível restaurar os dados da compra: ${rollbackError.message}` : ei.message, 'error');
+        return;
+      }
+      const retainedIds = items.map(i => i.id).filter(Boolean);
+      const removedIds = state.itensCompras.filter(i => i.compra_id === purchase.id && !retainedIds.includes(i.id)).map(i => i.id);
+      if (removedIds.length) {
+        const {error: er} = await db.from(TABLES.ITENS_COMPRAS).delete().in('id', removedIds);
+        if (er) { btn.disabled = false; closeModal(); await refresh(); toast(`Compra atualizada, mas alguns itens removidos não puderam ser excluídos: ${er.message}`, 'error'); return; }
+      }
+      btn.disabled = false; closeModal(); await refresh();
+      state.compraMes = purchaseDate.slice(0, 7); state.compraTodos = false; navigate('compras');
+      toast('Compra atualizada. O preço de referência dos insumos não foi alterado.', 'success');
+      return;
+    }
     const {data: comp, error} = await db.from(TABLES.COMPRAS).insert({data_compra: purchaseDate, fornecedor: $('p-supplier').value.trim(), observacao: $('p-note').value.trim(), total}).select().single();
     if (error) { btn.disabled = false; toast(error.message, 'error'); return; }
     const payload = items.map(i => ({compra_id: comp.id, insumo_id: i.insumo_id, quantidade: i.quantidade, unidade: findInsumo(i.insumo_id)?.unidade_compra || 'un', preco_unitario: i.preco_unitario, total: i.total}));
@@ -377,7 +416,7 @@
   function viewPurchase(id) {
     const c = state.compras.find(x => x.id === id); if (!c) return;
     const its = state.itensCompras.filter(i => i.compra_id === id);
-    openModal(`Compra de ${fmtDate(c.data_compra)}`, `<div class="muted" style="margin-bottom:14px">${esc(c.fornecedor || 'Sem fornecedor')}${c.observacao ? ` · ${esc(c.observacao)}` : ''}</div><div class="table-wrap"><table class="table" style="min-width:0"><thead><tr><th>Insumo</th><th>Qtd.</th><th>Preço por emb.</th><th>Total</th></tr></thead><tbody>${its.map(i => { const ins = findInsumo(i.insumo_id); return `<tr><td><strong>${esc(ins?.nome || 'Insumo removido')}</strong></td><td>${num(i.quantidade)} emb.</td><td class="money">${money(i.preco_unitario)}</td><td class="money">${money(i.total)}</td></tr>`; }).join('')}</tbody></table></div><div class="cost-line total"><span>Total</span><strong class="money">${money(c.total)}</strong></div><div class="modal-actions"><button class="glass-btn" type="button" data-close-modal>Fechar</button></div>`, 'COMPRAS');
+    openModal(`Compra de ${fmtDate(c.data_compra)}`, `<div class="muted" style="margin-bottom:14px">${esc(c.fornecedor || 'Sem fornecedor')}${c.observacao ? ` · ${esc(c.observacao)}` : ''}</div><div class="table-wrap"><table class="table" style="min-width:0"><thead><tr><th>Insumo</th><th>Qtd.</th><th>Preço por emb.</th><th>Total</th></tr></thead><tbody>${its.map(i => { const ins = findInsumo(i.insumo_id); return `<tr><td><strong>${esc(ins?.nome || 'Insumo removido')}</strong></td><td>${num(i.quantidade)} emb.</td><td class="money">${money(i.preco_unitario)}</td><td class="money">${money(i.total)}</td></tr>`; }).join('')}</tbody></table></div><div class="cost-line total"><span>Total</span><strong class="money">${money(c.total)}</strong></div><div class="modal-actions"><button class="glass-btn" type="button" data-close-modal>Fechar</button><button class="glass-btn primary" type="button" onclick="window.gestao.editPurchase('${c.id}')">Editar compra</button></div>`, 'COMPRAS');
   }
   async function deletePurchase(id) {
     if (!confirm('Excluir esta compra e seus itens? O preço de referência dos insumos não será alterado.')) return;
@@ -447,6 +486,6 @@
   $('modal').addEventListener('change', onFormInput);
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').classList.contains('hidden')) closeModal(); });
 
-  window.gestao = {navigate, openIngredient, editIngredient, deleteIngredient, openPurchase, viewPurchase, deletePurchase, closeModal};
+  window.gestao = {navigate, openIngredient, editIngredient, deleteIngredient, openPurchase, editPurchase, viewPurchase, deletePurchase, closeModal};
   start();
 })();

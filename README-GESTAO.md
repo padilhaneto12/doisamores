@@ -21,6 +21,8 @@ Foram removidas da tela: Visão geral, Equipamentos, Receitas e Precificação. 
 ## Compras
 
 - Registro de compra com vários itens; o preço de referência de cada insumo passa a ser (valor pago ÷ nº de embalagens).
+- Em cada compra, o preço por embalagem pode ser ajustado ao valor realmente pago ao fornecedor. O preço atual do insumo é apenas sugerido; cada compra mantém seu próprio preço e total registrados, sem alterar compras anteriores.
+- Compras registradas podem ser editadas pela lista ou pelo detalhe. A edição atualiza os dados e itens daquela compra, mas não altera o preço de referência dos insumos.
 - Compra com data anterior à última compra do insumo não sobrescreve o preço de referência.
 - Botão **Novo insumo** dentro do registro de compra, para cadastrar um insumo sem sair da tela.
 - Filtro por mês ou "Todos os meses" e detalhe dos itens.

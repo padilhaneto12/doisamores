@@ -18,7 +18,7 @@
 }
 
 /* ---------- fundo ---------- */
-html,body{background:radial-gradient(circle at 18% 0%,rgba(110,34,62,.55) 0,transparent 42%),radial-gradient(circle at 92% 8%,rgba(150,52,40,.28) 0,transparent 36%),var(--pv-bg)}
+html,body{background-color:var(--pv-bg);background-image:radial-gradient(circle at 18% 0%,rgba(110,34,62,.55) 0,transparent 42%),radial-gradient(circle at 92% 8%,rgba(150,52,40,.28) 0,transparent 36%),url('../images/svg/textura-fundo.svg');background-position:center top,center top,center top;background-size:auto,auto,cover;background-repeat:no-repeat;background-attachment:scroll,scroll,fixed}
 .admin-dashboard-layout,.admin-main-content,.admin-body-scroll{background:radial-gradient(circle at 20% 0%,rgba(118,36,66,.42) 0,transparent 46%),radial-gradient(circle at 100% 30%,rgba(130,46,40,.20) 0,transparent 40%),#14070e}
 .admin-dashboard-layout{border:1px solid var(--pv-line);box-shadow:0 40px 110px rgba(0,0,0,.72)}
 
@@ -181,3 +181,18 @@ html,body{background:radial-gradient(circle at 18% 0%,rgba(110,34,62,.55) 0,tran
   .ov-vendidos{font-size:.82rem}
 }
 @media(prefers-reduced-motion:reduce){.ov-row,.ov-row:hover{transition:none;transform:none}}
+
+/* ---------- banner coletivo em largura total ---------- */
+.banner-coletivo-wrap{width:100%;max-width:none;padding:0}
+.banner-coletivo-section{padding:0;background:var(--surface-0)}
+.banner-coletivo-link{border:0;border-radius:0;box-shadow:none;animation:none}
+.banner-coletivo-link:hover{transform:none}
+.banner-coletivo-img{width:100%;height:auto;object-fit:contain}
+.product-marquee{width:100%;margin:0;border-radius:0}
+
+/* Deixe a textura global aparecer entre as imagens e os cartões. */
+.about{background:linear-gradient(180deg,rgba(18,8,11,.72),rgba(27,11,16,.72))}
+.menu{background:linear-gradient(180deg,rgba(18,8,11,.68),rgba(27,11,16,.68))}
+.pedido-coletivo-destaque{background:rgba(18,8,11,.68)}
+.steps,.local{background:rgba(27,11,16,.68)}
+.novidades-section{background:transparent}
