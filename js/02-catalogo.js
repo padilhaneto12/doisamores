@@ -1,6 +1,5 @@
   async function carregarCardapioNuvem() {
     await carregarFestivalNuvem();
-    await carregarSobremesasNuvem();
   }
 
   async function carregarFestivalNuvem() {
@@ -17,14 +16,6 @@
 
     renderizarNovidades();
     renderizarMenuCategorizado();
-  }
-
-  async function carregarSobremesasNuvem() {
-    const { data, error } = await db.from(DB_TABLES.PRODUTOS).select('*').eq('categoria', 'sobremesa');
-    if (error) return;
-
-    data.sort((a, b) => a.name.localeCompare(b.name));
-    renderizarSobremesas(data.map(p => ({ ...p, image: p.image_url || 'images/amor.jpeg' })));
   }
 
   async function carregarPedidosNuvem() {
@@ -461,36 +452,6 @@
           <div class="menu-grid">${htmlGridItens}</div>
         `;
       }
-    });
-  }
-
-  function renderizarSobremesas(listaSobremesas) {
-    const grid = $('grid-sobremesas');
-    if (!grid) return;
-    grid.innerHTML = '';
-    if (listaSobremesas.length === 0) return;
-
-    listaSobremesas.forEach(prod => {
-      const estoqueRestante = prod.limite - prod.vendidos;
-      const esgotado = estoqueRestante <= 0;
-      const priceFormatted = prod.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      const tagHtml = prod.eh_novidade ? '<span class="tag-novidade">Novidade</span>' : '';
-
-      grid.innerHTML += `
-        <div class="item-card ${esgotado ? 'esgotado-card' : ''}">
-          ${tagHtml}
-          <div>
-            <div class="item-photo"><img src="${prod.image}" alt="${prod.name}"></div>
-            <h3>${prod.name}</h3>
-          </div>
-          <div>
-            <div class="item-price">${priceFormatted}</div>
-            <button class="item-order" onclick="addToCart('${prod.id}')" ${esgotado ? 'disabled' : ''}>
-              ${esgotado ? 'Esgotado' : 'Adicionar ao carrinho +'}
-            </button>
-          </div>
-        </div>
-      `;
     });
   }
 
