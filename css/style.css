@@ -894,3 +894,17 @@ footer.footer-simples{padding:30px 0 22px}
   background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.16);transition:background .2s,transform .2s,border-color .2s}
 .footer-insta:hover{background:linear-gradient(145deg,rgba(243,168,59,.4),rgba(176,108,40,.3));border-color:rgba(243,168,59,.7);color:#fff;transform:translateY(-2px)}
 .footer-restrita{margin-top:12px;text-align:center}
+
+/* Relatório por Sabor e Período */
+.rel-atalhos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.rel-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.rel-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--creme-dim); }
+.rel-form .cart-input { padding: 8px 10px; font-size: 0.9rem; }
+.rel-check { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--creme-dim); cursor: pointer; }
+.rel-resumo { margin: 0 0 8px; font-size: 0.85rem; color: var(--creme-dim); }
+.rel-resumo b { color: var(--ouro); }
+.rel-vazio { text-align: center; color: var(--creme-dim); padding: 20px 0; font-style: italic; }
+.rel-tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; color: var(--creme); }
+.rel-tabela th, .rel-tabela td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+.rel-tabela th { color: var(--ouro); font-size: 0.8rem; text-transform: uppercase; letter-spacing: .04em; }
+@media (max-width: 520px) { .rel-form { grid-template-columns: 1fr; } }

@@ -344,6 +344,46 @@
   </div>
 </div>
 
+<!-- MODAL RELATÓRIO POR SABOR E PERÍODO -->
+<div class="custom-modal-overlay" id="modal-relatorio-sabores">
+  <div class="custom-modal" style="max-width: 640px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 10px;">
+      <h3 style="margin:0; color: var(--ouro);">Relatório por Sabor e Período</h3>
+      <button onclick="fecharModalRelatorioSabores()" style="background:none; border:none; color:var(--creme); font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+
+    <div class="rel-atalhos">
+      <button type="button" class="filter-btn" onclick="definirPeriodoRelatorioRapido('7d')">Últimos 7 dias</button>
+      <button type="button" class="filter-btn" onclick="definirPeriodoRelatorioRapido('30d')">Últimos 30 dias</button>
+      <button type="button" class="filter-btn" onclick="definirPeriodoRelatorioRapido('mes')">Este mês</button>
+      <button type="button" class="filter-btn" onclick="definirPeriodoRelatorioRapido('mes-anterior')">Mês anterior</button>
+    </div>
+
+    <div class="rel-form">
+      <label>De <input type="date" id="rel-data-inicio" class="cart-input" onchange="gerarRelatorioSaboresPeriodo()"></label>
+      <label>Até <input type="date" id="rel-data-fim" class="cart-input" onchange="gerarRelatorioSaboresPeriodo()"></label>
+      <label>Sabor (opcional)
+        <input type="text" id="rel-filtro-sabor" class="cart-input" list="rel-lista-sabores" placeholder="Todos os sabores" oninput="gerarRelatorioSaboresPeriodo()">
+        <datalist id="rel-lista-sabores"></datalist>
+      </label>
+      <label>Contar pela
+        <select id="rel-base-data" class="cart-input" onchange="gerarRelatorioSaboresPeriodo()">
+          <option value="dataEntrega">Data de entrega</option>
+          <option value="dataPedido">Data do pedido</option>
+        </select>
+      </label>
+    </div>
+    <label class="rel-check"><input type="checkbox" id="rel-incluir-coletivos" checked onchange="gerarRelatorioSaboresPeriodo()"> Incluir pedidos coletivos</label>
+
+    <div id="rel-resultado" style="margin: 14px 0; max-height: 40vh; overflow-y: auto;"></div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
+      <button class="btn-sm" onclick="baixarCsvRelatorioSabores()" style="padding: 10px 16px; background: rgba(255,255,255,0.1); color: var(--creme);">⬇ Baixar CSV</button>
+      <button class="btn-sm" onclick="imprimirRelatorioSaboresPeriodo()" style="padding: 10px 16px; background: var(--ouro); color: var(--carvao); font-weight: bold;">🖨 Imprimir</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL DETALHES/ITENS DO PEDIDO COLETIVO (CHECK DE ITENS COM FILTRO) -->
 <div class="custom-modal-overlay" id="modal-detalhes-coletivo">
   <div class="custom-modal" style="max-width: 650px;">
@@ -990,6 +1030,9 @@
             <button class="btn-sm" style="background: var(--ouro); color: var(--carvao); padding: 10px 18px; font-size: 0.85rem; font-weight: bold;" onclick="gerarRelatorioSaidaSabores()">
               📊 Relatório de Saída por Sabores
             </button>
+            <button class="btn-sm" style="background: transparent; border: 1px solid var(--ouro); color: var(--ouro); padding: 10px 18px; font-size: 0.85rem; font-weight: bold; margin-left: 8px;" onclick="abrirModalRelatorioSabores()">
+              🍓 Relatório por Sabor e Período
+            </button>
           </div>
         </div>
 
@@ -1184,6 +1227,7 @@
 <script src="js/06-cupons.js"></script>
 <script src="js/07-produtos-estoque.js"></script>
 <script src="js/08-carrinho-checkout.js"></script>
+<script src="js/09-relatorio-sabores.js"></script>
 
 </body>
 </html>
